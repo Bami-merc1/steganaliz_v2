@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Content Security Policy: no inline scripts, no external resources
+         except fonts. Directly implements the project doc's CSP defense. -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="
+        default-src 'self';
+        script-src 'self';
+        style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+        font-src 'self' https://fonts.gstatic.com;
+        img-src 'self' blob: data:;
+        worker-src 'self' blob:;
+        connect-src 'self';
+        frame-ancestors 'none';
+      "
+    />
+
+    <!-- Clickjacking prevention -->
+    <meta http-equiv="X-Frame-Options" content="DENY" />
+
+    <!-- MIME-sniffing prevention (Week 4's lesson, applied here) -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+
+    <title>Steganaliz | Steganography & Steganalysis Workbench</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

@@ -1,0 +1,42 @@
+:root {
+  /* Core palette — locked to reference UI */
+  --stg-black: #0d0d0d;
+  --stg-black-soft: #161615;
+  --stg-orange: #e8542a;
+  --stg-orange-soft: #f3ded7;
+
+  --stg-bg: #fafaf8;
+  --stg-surface: #ffffff;
+  --stg-border: #e6e4de;
+  --stg-border-strong: #d3d0c8;
+
+  --stg-text-primary: #1a1a18;
+  --stg-text-secondary: #6b6a63;
+  --stg-text-muted: #9a988f;
+  --stg-text-on-dark: #f2f1ec;
+  --stg-text-on-dark-muted: #9a988f;
+
+  --stg-danger: #c4544a;
+  --stg-success: #4a7d5e;
+  --stg-warning: #c9a15c;
+
+  --stg-font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --stg-font-mono: 'JetBrains Mono', 'IBM Plex Mono', monospace;
+
+  --stg-radius: 4px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--stg-bg);
+  color: var(--stg-text-primary);
+  font-family: var(--stg-font-sans);
+}
+
+.mono {
+  font-family: var(--stg-font-mono);
+}
