@@ -15,24 +15,32 @@ export default function FileInfoCard({
   capacityBytes,
   messageBytesUsed,
 }: Props) {
-  const pct = capacityBytes > 0 ? Math.min(100, (messageBytesUsed / capacityBytes) * 100) : 0;
+  const pct = capacityBytes > 0
+    ? Math.min(100, (messageBytesUsed / capacityBytes) * 100)
+    : 0;
   const overCapacity = messageBytesUsed > capacityBytes;
 
   return (
     <div className="border border-stgBorder rounded bg-stgSurface px-4 py-3 text-sm">
       <div className="flex items-center justify-between">
-        <span className="font-medium text-stgTextPrimary truncate max-w-[60%]">{fileName}</span>
+        <span className="font-medium text-stgTextPrimary truncate max-w-[60%]">
+          {fileName}
+        </span>
         <span className="mono text-xs text-stgTextMuted">{formatBytes(fileSize)}</span>
       </div>
       <div className="flex items-center justify-between mt-1 text-xs text-stgTextSecondary">
-        <span>Technique: <span className="mono">{technique}</span></span>
-        <span className={overCapacity ? 'text-stgDanger' : 'text-stgTextMuted'}>
+        <span>
+          Technique: <span className="mono font-medium text-stgTextPrimary">{technique}</span>
+        </span>
+        <span className={overCapacity ? 'text-stgDanger font-medium' : 'text-stgTextMuted'}>
           {formatBytes(messageBytesUsed)} / {formatBytes(capacityBytes)}
         </span>
       </div>
-      <div className="mt-2 h-1.5 rounded bg-stgBg overflow-hidden">
+      <div className="mt-2.5 h-1.5 rounded-full bg-stgBg overflow-hidden">
         <div
-          className={`h-full ${overCapacity ? 'bg-stgDanger' : 'bg-stgOrange'}`}
+          className={`h-full rounded-full transition-all ${
+            overCapacity ? 'bg-stgDanger' : pct > 80 ? 'bg-stgWarning' : 'bg-stgOrange'
+          }`}
           style={{ width: `${pct}%` }}
         />
       </div>

@@ -1,42 +1,29 @@
 :root {
-  /* Core palette — locked to reference UI */
-  --stg-black: #0d0d0d;
-  --stg-black-soft: #161615;
-  --stg-orange: #e8542a;
-  --stg-orange-soft: #f3ded7;
+  --stg-black:          #1a1a1a;
+  --stg-black-soft:     #222222;
+  --stg-orange:         #e8542a;
+  --stg-orange-soft:    #fdf0eb;
 
-  --stg-bg: #fafaf8;
-  --stg-surface: #ffffff;
-  --stg-border: #e6e4de;
-  --stg-border-strong: #d3d0c8;
+  --stg-sidebar:        #5f778f;
+  --stg-sidebar-hover:  #243444;
+  --stg-sidebar-active: #29404f;
+  --stg-sidebar-border: #2a3a4a;
+  --stg-sidebar-text:   #9bb0c4;
 
-  --stg-text-primary: #1a1a18;
-  --stg-text-secondary: #6b6a63;
-  --stg-text-muted: #9a988f;
-  --stg-text-on-dark: #f2f1ec;
-  --stg-text-on-dark-muted: #9a988f;
+  --stg-bg:             #f4f5f7;
+  --stg-surface:        #ffffff;
+  --stg-border:         #dde1e7;
+  --stg-border-strong:  #c4c9d4;
 
-  --stg-danger: #c4544a;
-  --stg-success: #4a7d5e;
-  --stg-warning: #c9a15c;
+  --stg-text-primary:   #57689b;
+  --stg-text-secondary: #546e7a;
+  --stg-text-muted:     #8a9bb0;
+  --stg-text-on-dark:   #e8edf2;
+
+  --stg-danger:         #c4544a;
+  --stg-success:        #2e7d52;
+  --stg-warning:        #b07a2a;
 
   --stg-font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   --stg-font-mono: 'JetBrains Mono', 'IBM Plex Mono', monospace;
-
-  --stg-radius: 4px;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  background: var(--stg-bg);
-  color: var(--stg-text-primary);
-  font-family: var(--stg-font-sans);
-}
-
-.mono {
-  font-family: var(--stg-font-mono);
 }

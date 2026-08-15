@@ -5,21 +5,27 @@ import ForensicReport from './ForensicReport';
 
 type ForensicsTool = 'heatmap' | 'bitplane' | 'report';
 
-const TOOLS: { id: ForensicsTool; label: string; description: string }[] = [
+const TOOLS: { id: ForensicsTool; label: string; icon: string; description: string }[] = [
   {
     id: 'heatmap',
     label: 'Entropy Heatmap',
-    description: 'Visualise per-block Shannon entropy as a colour heatmap — anomalous regions stand out as hot spots.',
+    icon: '◫',
+    description:
+      'Visualise per-block Shannon entropy as a colour heatmap — anomalous high-entropy regions appear as hot spots against the natural baseline.',
   },
   {
     id: 'bitplane',
     label: 'Bitplane Inspector',
-    description: 'Isolate and view any single bit-position of any colour channel. Sequential LSB payloads produce a visible rectangular boundary in the LSB plane.',
+    icon: '⊟',
+    description:
+      'Isolate and view any single bit-position of any colour channel. Sequential LSB payloads produce a sharp rectangular boundary in the LSB plane.',
   },
   {
     id: 'report',
     label: 'Forensic Report',
-    description: 'Run the full 10-detector steganalysis suite and generate a downloadable forensic report with methodology notes and disclaimer.',
+    icon: '⎙',
+    description:
+      'Run the full 10-detector steganalysis suite and export a structured forensic report (PDF or .txt) with methodology notes and a formal disclaimer.',
   },
 ];
 
@@ -28,35 +34,52 @@ export default function ForensicsPanel() {
   const active = TOOLS.find((t) => t.id === activeTool)!;
 
   return (
-    <div className="flex h-full">
-      <aside className="w-56 border-r border-stgBorder shrink-0 pt-4">
-        <p className="px-5 pb-2 text-[11px] tracking-wider text-stgTextMuted font-medium">
-          TOOLS
-        </p>
-        {TOOLS.map((tool) => (
-          <button
-            key={tool.id}
-            onClick={() => setActiveTool(tool.id)}
-            className={`block w-full text-left px-5 py-2.5 text-sm border-l-2 transition-colors ${
-              activeTool === tool.id
-                ? 'border-stgOrange bg-stgOrangeSoft/40 text-stgTextPrimary font-medium'
-                : 'border-transparent text-stgTextSecondary hover:bg-stgSurface hover:text-stgTextPrimary'
-            }`}
-          >
-            {tool.label}
-          </button>
-        ))}
+    <div className="flex flex-1 min-h-0">
+      {/* Dark sidebar — same as Workbench and Training */}
+      <aside className="w-52 bg-stgSidebar flex flex-col shrink-0">
+        <div className="px-4 pt-5 pb-2">
+          <span className="text-[10px] font-bold tracking-[0.15em] text-stgSidebarText/60 uppercase">
+            Tools
+          </span>
+        </div>
+        <nav className="flex flex-col gap-0.5 px-2">
+          {TOOLS.map((tool) => {
+            const isActive = activeTool === tool.id;
+            return (
+              <button
+                key={tool.id}
+                onClick={() => setActiveTool(tool.id)}
+                className={`w-full text-left flex items-center gap-2.5 px-3 py-2.5 rounded text-sm transition-colors border-l-2 ${
+                  isActive
+                    ? 'bg-stgSidebarActive border-stgOrange text-stgSidebarTextActive font-medium'
+                    : 'border-transparent text-stgSidebarText hover:bg-stgSidebarHover hover:text-stgSidebarTextActive'
+                }`}
+              >
+                <span className="text-xs opacity-70 w-4 text-center">{tool.icon}</span>
+                {tool.label}
+              </button>
+            );
+          })}
+        </nav>
       </aside>
 
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <div className="px-8 pt-6 pb-4 border-b border-stgBorder bg-stgSurface shrink-0">
-          <h2 className="text-lg font-semibold text-stgTextPrimary">{active.label}</h2>
-          <p className="text-sm text-stgTextSecondary mt-0.5 max-w-2xl">{active.description}</p>
+      {/* Content pane */}
+      <div className="flex-1 flex flex-col min-h-0">
+        {/* Tool header — matches Workbench PageHeader style */}
+        <div className="bg-stgSurface border-b border-stgBorder px-8 pt-6 pb-5 shrink-0">
+          <h2 className="text-xl font-semibold text-stgTextPrimary tracking-tight">
+            {active.label}
+          </h2>
+          <p className="text-sm text-stgTextSecondary mt-1.5 max-w-2xl leading-relaxed">
+            {active.description}
+          </p>
         </div>
-        <div className="flex-1 overflow-y-auto px-8 py-6">
-          {activeTool === 'heatmap' && <EntropyHeatmap />}
+
+        {/* Tool content */}
+        <div className="flex-1 overflow-y-auto px-8 py-6 bg-stgBg">
+          {activeTool === 'heatmap'  && <EntropyHeatmap />}
           {activeTool === 'bitplane' && <BitplaneInspector />}
-          {activeTool === 'report' && <ForensicReport />}
+          {activeTool === 'report'   && <ForensicReport />}
         </div>
       </div>
     </div>
