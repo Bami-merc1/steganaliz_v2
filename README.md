@@ -1,4 +1,4 @@
-# Steganaliz v1.0
+# Steganaliz v2.0
 
 A browser-based steganography and steganalysis workbench. Embed, extract,
 and detect hidden payloads across images, audio, and arbitrary file types —
