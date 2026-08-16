@@ -56,7 +56,7 @@ export default function ForensicsPanel() {
                 }`}
               >
                 <span className="text-xs font-semibold tracking-widest text-stgTextMuted uppercase">
-                  Tools
+                  {/* Tools */}
                 </span>
                 {tool.label}
               </button>

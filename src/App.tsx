@@ -1,8 +1,6 @@
 import AppShell from './components/layout/AppShell';
 import './styles/tokens.css';
 
-function App() {
+export default function App() {
   return <AppShell />;
 }
-
-export default App;
