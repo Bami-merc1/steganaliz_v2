@@ -36,7 +36,7 @@ export default function ForensicsPanel() {
   return (
     <div className="flex flex-1 min-h-0">
       {/* Dark sidebar — same as Workbench and Training */}
-      <aside className="w-52 bg-stgSidebar flex flex-col shrink-0">
+      <aside className="w-52 bg-stgBg border-r border-stgBorder flex flex-col shrink-0">
         <div className="px-4 pt-5 pb-2">
           <span className="text-[10px] font-bold tracking-[0.15em] text-stgSidebarText/60 uppercase">
             Tools
@@ -49,13 +49,15 @@ export default function ForensicsPanel() {
               <button
                 key={tool.id}
                 onClick={() => setActiveTool(tool.id)}
-                className={`w-full text-left flex items-center gap-2.5 px-3 py-2.5 rounded text-sm transition-colors border-l-2 ${
+                className={`w-full text-left px-5 py-3 text-sm border-l-2 transition-colors ${
                   isActive
-                    ? 'bg-stgSidebarActive border-stgOrange text-stgSidebarTextActive font-medium'
-                    : 'border-transparent text-stgSidebarText hover:bg-stgSidebarHover hover:text-stgSidebarTextActive'
+                    ? 'border-stgOrange bg-stgOrangeSoft text-black font-semibold'
+                    : 'border-transparent text-stgTextSecondary hover:bg-white hover:text-black'
                 }`}
               >
-                <span className="text-xs opacity-70 w-4 text-center">{tool.icon}</span>
+                <span className="text-xs font-semibold tracking-widest text-stgTextMuted uppercase">
+                  Tools
+                </span>
                 {tool.label}
               </button>
             );

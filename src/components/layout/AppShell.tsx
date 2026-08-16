@@ -71,7 +71,7 @@ function WorkbenchView() {
           subtitle={meta.subtitle}
           activeModule={activeModule}
         />
-        <div className="flex-1 overflow-y-auto px-8 py-6 bg-stgBg">
+        <div className="flex-1 overflow-y-auto px-8 py-6 bg-stgBg min-h-0">
           {activeModule === 'embed'    && <EmbedPanel />}
           {activeModule === 'extract'  && <ExtractPanel />}
           {activeModule === 'detect'   && <DetectPanel />}

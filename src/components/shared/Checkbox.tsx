@@ -6,7 +6,7 @@ interface Props {
 
 export default function Checkbox({ checked, onChange, label }: Props) {
   return (
-    <label className="flex items-center gap-2.5 text-sm text-stgTextPrimary cursor-pointer select-none">
+    <label className="flex items-center gap-2.5 text-sm text-black cursor-pointer select-none">
       <input
         type="checkbox"
         checked={checked}

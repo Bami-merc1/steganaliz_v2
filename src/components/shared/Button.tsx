@@ -11,16 +11,15 @@ export default function Button({
   disabled,
   ...rest
 }: Props) {
-  const base = 'px-4 py-2 rounded text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-stgOrange/40';
-
+  const base = 'px-5 py-2.5 rounded text-sm font-semibold transition-colors';
   const styles =
     variant === 'primary'
       ? disabled
         ? 'bg-stgBorderStrong text-stgTextMuted cursor-not-allowed'
-        : 'bg-stgOrange text-white hover:bg-stgOrange/90 active:bg-stgOrange/80'
+        : 'bg-stgOrange text-white hover:bg-stgOrange/90'
       : disabled
-        ? 'bg-stgSurface border border-stgBorder text-stgTextMuted cursor-not-allowed'
-        : 'bg-stgSurface border border-stgBorderStrong text-stgTextPrimary hover:bg-stgBg hover:border-stgTextMuted';
+        ? 'bg-white border border-stgBorder text-stgTextMuted cursor-not-allowed'
+        : 'bg-white border border-stgBorderStrong text-black hover:bg-stgBg';
 
   return (
     <button className={`${base} ${styles} ${className}`} disabled={disabled} {...rest}>

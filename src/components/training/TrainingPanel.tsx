@@ -20,12 +20,12 @@ export default function TrainingPanel() {
   return (
     <div className="flex flex-1 min-h-0">
       {/* Dark sidebar — matches Workbench sidebar */}
-      <aside className="w-64 bg-stgSidebar flex flex-col shrink-0 overflow-y-auto">
+      <aside className="w-64 bg-stgBg border-r border-stgBorder flex flex-col shrink-0 overflow-y-auto">
         {CURRICULUM.map((track) => (
           <div key={track.id}>
             {/* Track header */}
-            <div className="px-4 pt-5 pb-2 sticky top-0 bg-stgSidebar z-10">
-              <p className="text-[10px] font-bold tracking-[0.12em] text-stgSidebarText/60 uppercase leading-tight">
+            <div className="px-4 pt-5 pb-2 sticky top-0 bg-stgBg z-10">
+              <p className="text-xs font-semibold tracking-widest text-stgTextMuted uppercase leading-tight">
                 {track.title.replace(/^Phase \d+:\s*/i, '')}
               </p>
               <span className={`inline-block mt-1 text-[10px] px-1.5 py-0.5 rounded font-medium ${LEVEL_BADGE[track.level]}`}>
@@ -51,11 +51,11 @@ export default function TrainingPanel() {
                       <button
                         key={lesson.id}
                         onClick={() => setActiveLesson(lesson)}
-                        className={`w-full text-left px-4 py-2 text-[12px] border-l-2 transition-colors leading-snug ${
-                          isActive
-                            ? 'border-stgOrange bg-stgSidebarActive text-stgSidebarTextActive font-medium'
-                            : 'border-transparent text-stgSidebarText hover:bg-stgSidebarHover hover:text-stgSidebarTextActive'
-                        }`}
+                        className={`w-full text-left px-4 py-2 text-sm border-l-2 transition-colors leading-snug ${
+                        isActive
+                          ? 'border-stgOrange bg-stgOrangeSoft text-black font-semibold'
+                          : 'border-transparent text-stgTextSecondary hover:bg-white hover:text-black'
+                      }`}
                       >
                         {lesson.title}
                       </button>

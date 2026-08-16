@@ -1,13 +1,13 @@
 import type { ModuleId } from './AppShell';
 
-const MODULES: { id: ModuleId; label: string}[] = [
-  { id: 'embed',    label: 'Embed'},
-  { id: 'extract',  label: 'Extract'},
-  { id: 'detect',   label: 'Detect'},
-  { id: 'batch',    label: 'Batch'},
-  { id: 'metadata', label: 'Metadata'},
-  { id: 'history',  label: 'History'},
-  { id: 'ctf',      label: 'CTF Mode'},
+const MODULES: { id: ModuleId; label: string }[] = [
+  { id: 'embed',    label: 'Embed'    },
+  { id: 'extract',  label: 'Extract'  },
+  { id: 'detect',   label: 'Detect'   },
+  { id: 'batch',    label: 'Batch'    },
+  { id: 'metadata', label: 'Metadata' },
+  { id: 'history',  label: 'History'  },
+  { id: 'ctf',      label: 'CTF'      },
 ];
 
 interface Props {
@@ -17,27 +17,26 @@ interface Props {
 
 export default function Sidebar({ active, onSelect }: Props) {
   return (
-    <aside className="w-52 bg-stgSidebar flex flex-col justify-between shrink-0">
+    <aside className="w-56 bg-stgBg border-r border-stgBorder flex flex-col justify-between shrink-0">
       <div>
-        <div className="px-4 pt-5 pb-2">
-          <span className="text-[10px] font-bold tracking-[0.15em] text-stgSidebarText/60 uppercase">
+        <div className="px-5 pt-5 pb-2">
+          <span className="text-xs font-semibold tracking-widest text-stgTextMuted uppercase">
             Modules
           </span>
         </div>
-        <nav className="flex flex-col gap-0.5 px-2">
+        <nav className="flex flex-col">
           {MODULES.map((m) => {
             const isActive = m.id === active;
             return (
               <button
                 key={m.id}
                 onClick={() => onSelect(m.id)}
-                className={`w-full text-left flex items-center gap-2.5 px-3 py-2.5 rounded text-sm transition-colors border-l-2 ${
+                className={`text-left px-5 py-3 text-sm border-l-2 transition-colors ${
                   isActive
-                    ? 'bg-stgSidebarActive border-stgOrange text-stgSidebarTextActive font-medium'
-                    : 'border-transparent text-stgSidebarText hover:bg-stgSidebarHover hover:text-stgSidebarTextActive'
+                    ? 'border-stgOrange bg-stgOrangeSoft text-black font-semibold'
+                    : 'border-transparent text-stgTextSecondary hover:bg-white hover:text-black'
                 }`}
               >
-                <span className="text-xs opacity-70 w-4 text-center">{}</span>
                 {m.label}
               </button>
             );
@@ -45,11 +44,10 @@ export default function Sidebar({ active, onSelect }: Props) {
         </nav>
       </div>
 
-      <div className="mx-3 mb-5 pt-4 border-t border-stgSidebarBorder">
-        <p className="mono text-[10px] leading-relaxed text-stgSidebarText/50">
-          AES-256-GCM · PBKDF2-SHA256<br />
-          310,000 iterations<br />
-          All processing in this browser.
+      <div className="mx-5 mb-5 pt-4 border-t border-stgBorder">
+        <p className="mono text-xs leading-relaxed text-stgTextMuted">
+          AES-256-GCM · PBKDF2-SHA256 · 310,000 iterations.
+          All processing executes in this browser via the Web Crypto API.
         </p>
       </div>
     </aside>

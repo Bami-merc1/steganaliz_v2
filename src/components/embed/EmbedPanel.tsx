@@ -104,11 +104,10 @@ export default function EmbedPanel() {
       const a = document.createElement('a');
       const dot = file.name.lastIndexOf('.');
       const baseName = dot >= 0 ? file.name.slice(0, dot) : file.name;
-      const outExt =
-        selectedEngine.embed.supportedExtensions.includes('png') ||
-        selectedEngine.embed.supportedExtensions.includes('bmp')
-          ? 'png'
-          : (file.name.split('.').pop() ?? 'bin');
+      const lsbPixelEngines = ['png-lsb-sequential', 'png-lsb-randomized'];
+      const outExt = lsbPixelEngines.includes(selectedEngine.id)
+        ? 'png'
+        : (file.name.split('.').pop() ?? 'bin');
       a.href = url;
       a.download = `${baseName}_stego.${outExt}`;
       a.click();
