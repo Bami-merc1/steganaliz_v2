@@ -2,6 +2,7 @@ import { useState, useRef} from 'react';
 import Dropzone from '../shared/Dropzone';
 import Button from '../shared/Button';
 
+const [errorMessage, setErrorMessage] = useState<string | null>(null);
 const BLOCK_SIZE = 16; // pixels per block for entropy calculation
 // const PALETTE_STEPS = 256;
 
@@ -52,6 +53,14 @@ export default function EntropyHeatmap() {
   const originalCanvasRef = useRef<HTMLCanvasElement>(null);
 
   const handleFile = (f: File) => {
+    const ext = f.name.split('.').pop()?.toLowerCase() ?? '';
+    const supported = ['png', 'jpg', 'jpeg', 'bmp', 'gif', 'webp'];
+    if (!supported.includes(ext)) {
+      setErrorMessage(`Entropy heatmap requires a raster image file (PNG, JPG, BMP, GIF). "${ext}" files cannot be decoded to pixel data.`);
+      setFile(null);
+      return;
+    }
+    setErrorMessage(null);
     setFile(f);
     setStats(null);
   };
@@ -125,8 +134,8 @@ export default function EntropyHeatmap() {
       const max = Math.max(...blockEntropies);
       const mean = blockEntropies.reduce((a, b) => a + b, 0) / blockEntropies.length;
       setStats({ min, max, mean, blockCount: blockEntropies.length });
-    } catch {
-      // not a decodable image
+    } catch (err) {
+      setErrorMessage(`Could not decode image: ${err instanceof Error ? err.message : 'unknown error'}. Try a PNG or JPG file.`);
     } finally {
       setIsAnalyzing(false);
     }
@@ -135,6 +144,7 @@ export default function EntropyHeatmap() {
   return (
     <div className="space-y-5">
       <Dropzone onFileSelected={handleFile} acceptedLabel="PNG, BMP, JPG" />
+      {errorMessage && <p className="text-xs text-stgDanger">{errorMessage}</p>}
 
       {file && (
         <Button onClick={runHeatmap} disabled={isAnalyzing}>

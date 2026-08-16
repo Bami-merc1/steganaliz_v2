@@ -12,6 +12,8 @@ import HistoryPanel from '../history/HistoryPanel';
 import CTFPanel from '../ctf/CTFPanel';
 import TrainingPanel from '../training/TrainingPanel';
 import ForensicsPanel from '../forensics/ForensicsPanel';
+import { useEffect } from 'react';
+import TermsModal from './TermsModal';
 
 export type ModuleId =
   | 'embed'
@@ -54,24 +56,48 @@ const MODULE_META: Record<ModuleId, { title: string; subtitle: string }> = {
   },
 };
 
-const HANDLED_MODULES: ModuleId[] = [
-  'embed', 'extract', 'detect', 'history', 'batch', 'metadata', 'ctf',
-];
+// cog
 
 function WorkbenchView() {
   const [activeModule, setActiveModule] = useState<ModuleId>('embed');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const meta = MODULE_META[activeModule];
 
+  const handleModuleSelect = (id: ModuleId) => {
+    setActiveModule(id);
+    setSidebarOpen(false); // close on mobile after selection
+  };
+
   return (
-    <div className="flex flex-1 min-h-0">
-      <Sidebar active={activeModule} onSelect={setActiveModule} />
-      <main className="flex-1 flex flex-col min-h-0">
+    <div className="flex flex-1 min-h-0 overflow-hidden relative">
+      {/* Mobile sidebar overlay */}
+      {sidebarOpen && (
+        <div
+          className="md:hidden fixed inset-0 bg-black/40 z-20"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
+      {/* Sidebar — hidden on mobile unless open */}
+      <div className={`
+        fixed md:relative z-30 md:z-auto
+        top-0 md:top-auto left-0 md:left-auto
+        h-full md:h-auto
+        transition-transform duration-200
+        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+      `}>
+        <Sidebar active={activeModule} onSelect={handleModuleSelect} />
+      </div>
+
+      {/* Main content */}
+      <main className="flex-1 flex flex-col min-h-0 overflow-hidden min-w-0">
         <PageHeader
           title={meta.title}
           subtitle={meta.subtitle}
           activeModule={activeModule}
+          onMenuClick={() => setSidebarOpen(true)}
         />
-        <div className="flex-1 overflow-y-auto px-8 py-6 bg-stgBg min-h-0">
+        <div className="flex-1 overflow-y-auto px-4 md:px-8 py-6 bg-stgBg">
           {activeModule === 'embed'    && <EmbedPanel />}
           {activeModule === 'extract'  && <ExtractPanel />}
           {activeModule === 'detect'   && <DetectPanel />}
@@ -79,11 +105,6 @@ function WorkbenchView() {
           {activeModule === 'metadata' && <MetadataPanel />}
           {activeModule === 'history'  && <HistoryPanel />}
           {activeModule === 'ctf'      && <CTFPanel />}
-          {!HANDLED_MODULES.includes(activeModule) && (
-            <div className="text-stgTextSecondary text-sm">
-              {meta.title} — coming soon.
-            </div>
-          )}
         </div>
       </main>
     </div>
@@ -92,9 +113,29 @@ function WorkbenchView() {
 
 export default function AppShell() {
   const [activeView, setActiveView] = useState<TopLevelView>('workbench');
+  const [consentGiven, setConsentGiven] = useState<boolean>(false);
+  const [consentChecked, setConsentChecked] = useState(false);
+
+  useEffect(() => {
+    // Check if user has already accepted terms this browser session
+    const accepted = localStorage.getItem('steganaliz_terms_accepted');
+    setConsentGiven(accepted === 'v1');
+    setConsentChecked(true);
+  }, []);
+
+  const handleAccept = () => {
+    localStorage.setItem('steganaliz_terms_accepted', 'v1');
+    setConsentGiven(true);
+  };
+
+  if (!consentChecked) return null; // avoid flash
 
   return (
     <div className="h-screen flex flex-col overflow-hidden">
+      {!consentGiven && (
+        <TermsModal mode="gate" onAccept={handleAccept} />
+      )}
+      
       <Navbar active={activeView} onSelect={setActiveView} />
 
       <div className="flex-1 flex min-h-0">

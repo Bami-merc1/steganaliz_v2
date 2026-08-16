@@ -6,7 +6,14 @@ export interface MetadataStripResult {
   method: string;
 }
 
-const IMAGE_EXTENSIONS = ['png', 'bmp', 'jpg', 'jpeg'];
+const IMAGE_EXTENSIONS = ['png', 'bmp', 'jpg', 'jpeg', 'pdf', 'docx', 'mp3', 'mp4', 'wav', 'svg', 'txt', 'md', 'html', 'xml', 'csv',];
+
+export const METADATA_STRIPPABLE_EXTENSIONS = IMAGE_EXTENSIONS;
+export const METADATA_PASSTHROUGH_EXTENSIONS = [
+  'png', 'bmp', 'jpg', 'jpeg',
+  'pdf', 'docx', 'mp3', 'mp4', 'wav', 'svg',
+  'txt', 'md', 'html', 'xml', 'csv',
+];
 
 async function stripImageMetadata(file: File): Promise<MetadataStripResult> {
   // Re-encoding through canvas drops EXIF, ICC profiles, XMP, and any
