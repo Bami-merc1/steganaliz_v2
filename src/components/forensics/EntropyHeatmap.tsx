@@ -1,30 +1,22 @@
-import { useState, useRef} from 'react';
+import { useState, useRef } from 'react';
 import Dropzone from '../shared/Dropzone';
 import Button from '../shared/Button';
 
-const [errorMessage, setErrorMessage] = useState<string | null>(null);
-const BLOCK_SIZE = 16; // pixels per block for entropy calculation
-// const PALETTE_STEPS = 256;
+const BLOCK_SIZE = 16;
+const SUPPORTED_EXTENSIONS = ['png', 'jpg', 'jpeg', 'bmp', 'gif', 'webp'];
 
-// Generates a colour for an entropy value 0-8 bits/byte using a
-// perceptually meaningful heatmap: deep blue (low entropy = natural/clean)
-// through green, yellow, to bright red (high entropy = random/encrypted/stego).
 function entropyToColor(entropy: number): [number, number, number] {
   const t = Math.max(0, Math.min(1, entropy / 8));
   if (t < 0.25) {
-    // deep blue → blue
     const s = t / 0.25;
     return [0, Math.round(s * 100), Math.round(139 + s * 116)];
   } else if (t < 0.5) {
-    // blue → green
     const s = (t - 0.25) / 0.25;
     return [0, Math.round(100 + s * 155), Math.round(255 - s * 255)];
   } else if (t < 0.75) {
-    // green → yellow
     const s = (t - 0.5) / 0.25;
     return [Math.round(s * 255), 255, 0];
   } else {
-    // yellow → red
     const s = (t - 0.75) / 0.25;
     return [255, Math.round(255 - s * 255), 0];
   }
@@ -46,18 +38,25 @@ function shannonEntropy(bytes: Uint8Array): number {
 export default function EntropyHeatmap() {
   const [file, setFile] = useState<File | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [stats, setStats] = useState<{
-    min: number; max: number; mean: number; blockCount: number;
+    min: number;
+    max: number;
+    mean: number;
+    blockCount: number;
   } | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const originalCanvasRef = useRef<HTMLCanvasElement>(null);
 
   const handleFile = (f: File) => {
     const ext = f.name.split('.').pop()?.toLowerCase() ?? '';
-    const supported = ['png', 'jpg', 'jpeg', 'bmp', 'gif', 'webp'];
-    if (!supported.includes(ext)) {
-      setErrorMessage(`Entropy heatmap requires a raster image file (PNG, JPG, BMP, GIF). "${ext}" files cannot be decoded to pixel data.`);
+    if (!SUPPORTED_EXTENSIONS.includes(ext)) {
+      setErrorMessage(
+        `Entropy heatmap requires a raster image (PNG, JPG, BMP, GIF, WEBP). ` +
+        `".${ext}" files cannot be decoded to pixel data.`
+      );
       setFile(null);
+      setStats(null);
       return;
     }
     setErrorMessage(null);
@@ -68,6 +67,7 @@ export default function EntropyHeatmap() {
   const runHeatmap = async () => {
     if (!file) return;
     setIsAnalyzing(true);
+    setErrorMessage(null);
 
     try {
       const bitmap = await createImageBitmap(file);
@@ -75,19 +75,23 @@ export default function EntropyHeatmap() {
       const h = bitmap.height;
 
       // Draw original image
-      const origCanvas = originalCanvasRef.current!;
+      const origCanvas = originalCanvasRef.current;
+      if (!origCanvas) throw new Error('Canvas not available');
       origCanvas.width = w;
       origCanvas.height = h;
-      const origCtx = origCanvas.getContext('2d')!;
+      const origCtx = origCanvas.getContext('2d');
+      if (!origCtx) throw new Error('2D context unavailable');
       origCtx.drawImage(bitmap, 0, 0);
       const imageData = origCtx.getImageData(0, 0, w, h);
       const pixels = new Uint8Array(imageData.data.buffer);
 
-      // Draw heatmap
-      const heatCanvas = canvasRef.current!;
+      // Build heatmap
+      const heatCanvas = canvasRef.current;
+      if (!heatCanvas) throw new Error('Heatmap canvas not available');
       heatCanvas.width = w;
       heatCanvas.height = h;
-      const heatCtx = heatCanvas.getContext('2d')!;
+      const heatCtx = heatCanvas.getContext('2d');
+      if (!heatCtx) throw new Error('Heatmap context unavailable');
       const heatImageData = heatCtx.createImageData(w, h);
       const heatData = heatImageData.data;
 
@@ -102,7 +106,6 @@ export default function EntropyHeatmap() {
           const x1 = Math.min(x0 + BLOCK_SIZE, w);
           const y1 = Math.min(y0 + BLOCK_SIZE, h);
 
-          // Collect all channel bytes in this block (R+G+B, skip alpha)
           const blockBytes: number[] = [];
           for (let y = y0; y < y1; y++) {
             for (let x = x0; x < x1; x++) {
@@ -115,11 +118,10 @@ export default function EntropyHeatmap() {
           blockEntropies.push(entropy);
           const [r, g, b] = entropyToColor(entropy);
 
-          // Fill all pixels in this block with the entropy colour
           for (let y = y0; y < y1; y++) {
             for (let x = x0; x < x1; x++) {
               const idx = (y * w + x) * 4;
-              heatData[idx] = r;
+              heatData[idx]     = r;
               heatData[idx + 1] = g;
               heatData[idx + 2] = b;
               heatData[idx + 3] = 255;
@@ -130,12 +132,15 @@ export default function EntropyHeatmap() {
 
       heatCtx.putImageData(heatImageData, 0, 0);
 
-      const min = Math.min(...blockEntropies);
-      const max = Math.max(...blockEntropies);
+      const min  = Math.min(...blockEntropies);
+      const max  = Math.max(...blockEntropies);
       const mean = blockEntropies.reduce((a, b) => a + b, 0) / blockEntropies.length;
       setStats({ min, max, mean, blockCount: blockEntropies.length });
     } catch (err) {
-      setErrorMessage(`Could not decode image: ${err instanceof Error ? err.message : 'unknown error'}. Try a PNG or JPG file.`);
+      setErrorMessage(
+        `Could not decode image: ${err instanceof Error ? err.message : 'unknown error'}. ` +
+        `Try a PNG or JPG file.`
+      );
     } finally {
       setIsAnalyzing(false);
     }
@@ -143,10 +148,16 @@ export default function EntropyHeatmap() {
 
   return (
     <div className="space-y-5">
-      <Dropzone onFileSelected={handleFile} acceptedLabel="PNG, BMP, JPG" />
-      {errorMessage && <p className="text-xs text-stgDanger">{errorMessage}</p>}
+      <Dropzone
+        onFileSelected={handleFile}
+        acceptedLabel="PNG, JPG, BMP, GIF, WEBP"
+      />
 
-      {file && (
+      {errorMessage && (
+        <p className="text-xs text-stgDanger">{errorMessage}</p>
+      )}
+
+      {file && !errorMessage && (
         <Button onClick={runHeatmap} disabled={isAnalyzing}>
           {isAnalyzing ? 'Analysing…' : 'Generate entropy heatmap'}
         </Button>
@@ -160,23 +171,31 @@ export default function EntropyHeatmap() {
               { label: 'Mean entropy', value: stats.mean.toFixed(3) },
               { label: 'Max entropy', value: stats.max.toFixed(3) },
             ].map(({ label, value }) => (
-              <div key={label} className="border border-stgBorder rounded bg-stgSurface px-3 py-2">
+              <div
+                key={label}
+                className="border border-stgBorder rounded bg-white px-3 py-2"
+              >
                 <p className="text-xs text-stgTextMuted">{label}</p>
-                <p className="mono text-sm font-medium text-stgTextPrimary">{value} bits/byte</p>
+                <p className="mono text-sm font-medium text-black">
+                  {value} <span className="text-xs font-normal">bits/byte</span>
+                </p>
               </div>
             ))}
           </div>
 
-          {/* Heatmap legend */}
           <div className="flex items-center gap-3">
-            <span className="text-xs text-stgTextMuted">Low entropy</span>
-            <div className="flex-1 h-3 rounded" style={{
-              background: 'linear-gradient(to right, #00008b, #0064ff, #00ff00, #ffff00, #ff0000)'
-            }} />
-            <span className="text-xs text-stgTextMuted">High entropy</span>
+            <span className="text-xs text-stgTextMuted whitespace-nowrap">Low entropy</span>
+            <div
+              className="flex-1 h-3 rounded"
+              style={{
+                background:
+                  'linear-gradient(to right, #00008b, #0064ff, #00ff00, #ffff00, #ff0000)',
+              }}
+            />
+            <span className="text-xs text-stgTextMuted whitespace-nowrap">High entropy</span>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <p className="text-xs text-stgTextMuted mb-1.5">Original image</p>
               <canvas
@@ -187,7 +206,8 @@ export default function EntropyHeatmap() {
             </div>
             <div>
               <p className="text-xs text-stgTextMuted mb-1.5">
-                Entropy heatmap ({BLOCK_SIZE}×{BLOCK_SIZE}px blocks)
+                Entropy heatmap ({BLOCK_SIZE}×{BLOCK_SIZE}px blocks ·{' '}
+                {stats.blockCount} blocks)
               </p>
               <canvas
                 ref={canvasRef}

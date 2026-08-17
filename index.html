@@ -4,17 +4,19 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- Primary meta -->
     <title>Steganaliz — Steganography & Steganalysis Workbench</title>
     <meta name="description" content="Browser-based steganography and steganalysis workbench. Embed, extract, and detect hidden payloads across images, audio, and arbitrary files — entirely client-side. No data leaves your device." />
     <meta name="theme-color" content="#0d0d0d" />
+    <meta name="keywords" content="steganography, steganalysis, LSB embedding, AES encryption, digital forensics, hidden data, browser-based, client-side" />
+    <meta name="author" content="Bamidele Mercy Enoch" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://steganaliz.emerc.site/" />
 
     <!-- PWA -->
     <link rel="manifest" href="/manifest.json" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
-    <!-- Fonts — preconnect first for speed, then load -->
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -27,39 +29,20 @@
     <meta property="og:type"        content="website" />
     <meta property="og:title"       content="Steganaliz — Steganography & Steganalysis Workbench" />
     <meta property="og:description" content="Browser-based steganography and steganalysis workbench. All processing client-side via Web Crypto API." />
-
-    <!-- Security headers (supplement the HTTP headers in _headers) -->
-    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
-    <meta http-equiv="X-Frame-Options"        content="DENY" />
-    <meta
-      http-equiv="Content-Security-Policy"
-      content="
-        default-src 'self';
-        script-src  'self';
-        style-src   'self' 'unsafe-inline' https://fonts.googleapis.com;
-        font-src    'self' https://fonts.gstatic.com;
-        img-src     'self' blob: data:;
-        worker-src  'self' blob:;
-        connect-src 'self';
-        frame-ancestors 'none';
-      "
-    />
-
-        <!-- SEO -->
-    <meta name="keywords" content="steganography, steganalysis, LSB embedding, AES encryption, digital forensics, hidden data, image steganography, browser-based, client-side" />
-    <meta name="author" content="Bamidele Mercy Enoch" />
-    <meta name="robots" content="index, follow" />
-    <link rel="canonical" href="https://steganaliz.emerc.site/" />
-
-    <!-- Open Graph -->
-    <meta property="og:url"          content="https://steganaliz.emerc.site/" />
-    <meta property="og:image"        content="https://steganaliz.emerc.site/og-image.png" />
-    <meta property="og:site_name"    content="Steganaliz" />
+    <meta property="og:url"         content="https://steganaliz.emerc.site/" />
+    <meta property="og:site_name"   content="Steganaliz" />
 
     <!-- Twitter Card -->
-    <meta name="twitter:card"        content="summary_large_image" />
+    <meta name="twitter:card"        content="summary" />
     <meta name="twitter:title"       content="Steganaliz — Steganography & Steganalysis Workbench" />
-    <meta name="twitter:description" content="Browser-based steganography and steganalysis workbench. All processing client-side — no data leaves your device." />
+    <meta name="twitter:description" content="Browser-based steganography and steganalysis workbench. No data leaves your device." />
+
+    <!-- Valid meta-deliverable security headers only -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' blob: data:; worker-src 'self' blob:; connect-src 'self';"
+    />
 
     <!-- Structured data -->
     <script type="application/ld+json">

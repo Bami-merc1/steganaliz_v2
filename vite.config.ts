@@ -12,20 +12,22 @@ export default defineConfig({
       output: {
         // manualChunks must be a function in Rollup 3+ / Vite 5+
         manualChunks(id) {
-          if (id.includes('react') || id.includes('react-dom')) {
+          if (!id.includes('node_modules')) {
+            if (id.includes('/src/data/')) return 'curriculum';
+            if (id.includes('/src/engines/')) return 'engines';
+            if (id.includes('/src/detectors/')) return 'detectors';
+            return;
+          }
+
+          if (
+            id.includes('node_modules/react/') ||
+            id.includes('node_modules/react-dom/') ||
+            id.includes('node_modules/scheduler/')
+          ) {
             return 'vendor-react';
           }
-          if (id.includes('fflate')) {
+          if (id.includes('node_modules/fflate')) {
             return 'vendor-zip';
-          }
-          if (id.includes('/src/data/')) {
-            return 'curriculum';
-          }
-          if (id.includes('/src/engines/')) {
-            return 'engines';
-          }
-          if (id.includes('/src/detectors/')) {
-            return 'detectors';
           }
         },
       },
@@ -48,5 +50,9 @@ export default defineConfig({
       'Cross-Origin-Opener-Policy': 'same-origin',
       'Cross-Origin-Embedder-Policy': 'require-corp',
     },
+  },
+
+  resolve: {
+    dedupe: ['react', 'react-dom'],
   },
 });
