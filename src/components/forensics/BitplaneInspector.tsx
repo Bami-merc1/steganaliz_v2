@@ -75,10 +75,10 @@ export default function BitplaneInspector() {
 
       // For natural images, LSB spatial correlation is close to 0.5 (random).
       // After embedding, correlation in the embedded region rises toward 1 OR
-      // drops toward 0 depending on payload content — either extreme is suspicious.
+      // drops toward 0 depending on payload content - either extreme is suspicious.
       // Score: deviation from 0.5 mapped to 0-100.
       const deviation = Math.abs(spatialCorrelation - 0.5) * 2;
-      // Also factor in ratio of 1s vs 0s — true random is near 50/50.
+      // Also factor in ratio of 1s vs 0s - true random is near 50/50.
       const biasDeviation = Math.abs((onesCount / (w * h)) - 0.5) * 2;
       const score = Math.round(Math.max(deviation, biasDeviation) * 100);
       setAnomalyScore(score);
@@ -174,7 +174,7 @@ export default function BitplaneInspector() {
           Spatial anomaly score: <span className="mono font-medium">{anomalyScore}%</span>
           {selectedBit === 0 && anomalyScore >= 40 && (
             <span className="text-xs ml-2 opacity-80">
-              — LSB plane looks statistically non-natural. Consider running the full Detect suite.
+              - LSB plane looks statistically non-natural. Consider running the full Detect suite.
             </span>
           )}
         </div>

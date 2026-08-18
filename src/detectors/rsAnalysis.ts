@@ -64,7 +64,7 @@ async function getChannelValues(file: File): Promise<number[] | null> {
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     const data = imageData.data;
 
-    // Red channel only, in raster order — RS's grouping is meant to operate
+    // Red channel only, in raster order - RS's grouping is meant to operate
     // over spatially adjacent values; interleaving R/G/B here would break
     // the "adjacent = spatially close" assumption the discrimination
     // function depends on.

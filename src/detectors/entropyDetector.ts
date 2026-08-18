@@ -31,7 +31,7 @@ function entropyToScore(entropy: number): number {
 export const entropyDetector: Detector = {
   id: 'entropy',
   name: 'Entropy analyzer',
-  weight: 0.6, // deliberately weighted below signature/structure detectors — see false-positive note
+  weight: 0.6, // deliberately weighted below signature/structure detectors - see false-positive note
   supportedExtensions: 'all',
 
   detect: async (file: File): Promise<DetectorResult> => {

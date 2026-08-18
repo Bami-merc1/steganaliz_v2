@@ -154,7 +154,7 @@ export async function generateForensicPdf(report: ReportData): Promise<Uint8Arra
     ['File name',   report.fileName],
     ['File size',   `${formatBytes(report.fileSize)} (${report.fileSize} bytes)`],
     ['File type',   report.fileType],
-    ['Processing',  'Client-side only — no data transmitted to any server'],
+    ['Processing',  'Client-side only - no data transmitted to any server'],
   ];
   for (const [label, value] of caseRows) {
     ensureSpace(16);

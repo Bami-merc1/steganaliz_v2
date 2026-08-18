@@ -135,7 +135,7 @@ export default function ExtractPanel() {
           <label className="block text-xs font-medium tracking-wide text-stgTextSecondary mb-1.5">
             EXTRACTED MESSAGE
           </label>
-          {/* Rendered as plain text, never as HTML — an extracted payload is
+          {/* Rendered as plain text, never as HTML - an extracted payload is
               untrusted input and must not be able to execute as markup. */}
           <pre className="mono w-full whitespace-pre-wrap break-words rounded border border-stgBorderStrong bg-stgSurface px-3 py-2.5 text-sm text-stgTextPrimary">
             {extractedMessage}

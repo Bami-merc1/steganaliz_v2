@@ -57,7 +57,7 @@ export default function TermsModal({ mode, onAccept, onClose }: Props) {
             </div>
 
             <section>
-              <h3 className="font-bold text-black text-base mb-2">1. Privacy — No Data Leaves This Device</h3>
+              <h3 className="font-bold text-black text-base mb-2">1. Privacy - No Data Leaves This Device</h3>
               <p>
                 Steganaliz processes all files, messages, passwords, and analysis results
                 entirely within your browser tab using the Web Crypto API and HTML5 Canvas API.
@@ -96,13 +96,13 @@ export default function TermsModal({ mode, onAccept, onClose }: Props) {
                 <li>Academic research and study in the fields of cybersecurity, digital forensics, and information security</li>
                 <li>Authorised digital forensic investigation by qualified professionals acting within their lawful mandate</li>
                 <li>Security research, vulnerability assessment, and penetration testing conducted with explicit written authorisation from the relevant asset owner</li>
-                <li>Capture The Flag (CTF) competitions and educational exercises</li>
+                {/* <li>Capture The Flag (CTF) competitions and educational exercises</li> */}
                 <li>Personal, private, and lawful communication privacy</li>
               </ul>
             </section>
 
             <section>
-              <h3 className="font-bold text-black text-base mb-2">4. Prohibited Uses — Criminal and Civil Liability</h3>
+              <h3 className="font-bold text-black text-base mb-2">4. Prohibited Uses - Criminal and Civil Liability</h3>
               <p>
                 The following uses are <strong>strictly prohibited</strong> and may constitute
                 criminal offences under applicable legislation including but not limited to:
@@ -187,8 +187,8 @@ export default function TermsModal({ mode, onAccept, onClose }: Props) {
             </section>
 
             <div className="text-xs text-gray-400 pt-2 border-t border-gray-100">
-              Steganaliz v1.0 · SQI College of ICT, Ogbomoso, Nigeria · August 2026 ·
-              Effective date: August 2026
+              {/* Steganaliz v1.0 · SQI College of ICT, Ogbomoso, Nigeria · August 2026 ·
+              Effective date: August 2026 */}
             </div>
           </div>
         </div>
@@ -224,7 +224,7 @@ export default function TermsModal({ mode, onAccept, onClose }: Props) {
                     : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                 }`}
               >
-                I Accept — Enter Steganaliz
+                I Accept - Enter Steganaliz
               </button>
             </div>
           ) : (

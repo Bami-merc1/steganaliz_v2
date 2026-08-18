@@ -19,7 +19,7 @@ export const eofAppendDetector: Detector = {
       label: labelForScore(found ? 95 : 5),
       applicable: true,
       details: found
-        ? 'Steganaliz EOF-append marker found — this file contains appended payload data.'
+        ? 'Steganaliz EOF-append marker found - this file contains appended payload data.'
         : 'No known EOF-append marker found.',
     };
   },

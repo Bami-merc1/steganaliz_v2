@@ -1,7 +1,7 @@
 import type { Detector, DetectorResult } from './types';
 import { labelForScore } from './types';
 
-// Known magic numbers, per Week 2/4's lessons — maps extension to expected
+// Known magic numbers, per Week 2/4's lessons - maps extension to expected
 // leading bytes. A mismatch between what the file CLAIMS to be (extension)
 // and what its actual bytes say is a genuine, general-purpose red flag,
 // independent of any specific embedding technique.
@@ -12,7 +12,7 @@ const SIGNATURES: Record<string, number[][]> = {
   bmp: [[0x42, 0x4d]],
   gif: [[0x47, 0x49, 0x46, 0x38]],
   pdf: [[0x25, 0x50, 0x44, 0x46]],
-  wav: [[0x52, 0x49, 0x46, 0x46]], // RIFF — WAVE marker sits at offset 8, checked separately below
+  wav: [[0x52, 0x49, 0x46, 0x46]], // RIFF - WAVE marker sits at offset 8, checked separately below
   zip: [[0x50, 0x4b, 0x03, 0x04]],
   docx: [[0x50, 0x4b, 0x03, 0x04]],
   pptx: [[0x50, 0x4b, 0x03, 0x04]],
@@ -47,7 +47,7 @@ export const headerConsistencyDetector: Detector = {
     const headerBytes = new Uint8Array(await file.slice(0, 16).arrayBuffer());
     const matches = candidates.some((sig) => matchesSignature(headerBytes, sig));
 
-    // WAV needs the secondary "WAVE" check at offset 8 — RIFF alone is
+    // WAV needs the secondary "WAVE" check at offset 8 - RIFF alone is
     // shared by other container formats (e.g. AVI), so it's not sufficient
     // on its own, per Week 2's lesson on WAV's two-part signature.
     let finalMatch = matches;
@@ -65,7 +65,7 @@ export const headerConsistencyDetector: Detector = {
       applicable: true,
       details: finalMatch
         ? `File signature matches expected .${ext} format.`
-        : `File signature does NOT match expected .${ext} format — possible mismatch or corruption.`,
+        : `File signature does NOT match expected .${ext} format - possible mismatch or corruption.`,
     };
   },
 };

@@ -21,10 +21,10 @@ async function getRedChannelValues(file: File): Promise<number[] | null> {
 }
 
 // Simplified Sample Pair Analysis: examines adjacent-sample pairs (u, v)
-// where u is even and v = u+1 (or vice versa) — classifying each pair by
+// where u is even and v = u+1 (or vice versa) - classifying each pair by
 // whether swapping their LSBs would change which is "higher." LSB embedding
 // disrupts the natural correlation between adjacent samples in a way
-// distinct from RS analysis's smoothness-based grouping (Week 12) — this
+// distinct from RS analysis's smoothness-based grouping (Week 12) - this
 // looks at ORDERED transitions between specific adjacent sample values,
 // not local difference sums.
 function samplePairScore(values: number[]): { score: number; suspiciousRatio: number } {
@@ -36,14 +36,14 @@ function samplePairScore(values: number[]): { score: number; suspiciousRatio: nu
     const v = values[i + 1];
     const diff = Math.abs(u - v);
 
-    // Only consider pairs that are "close" (differ by <= 1) — these are the
+    // Only consider pairs that are "close" (differ by <= 1) - these are the
     // pairs whose LSB relationship is most informative, analogous to
     // chi-square's adjacent-value-pair focus but applied to spatially
     // adjacent samples instead of a static histogram.
     if (diff <= 1) {
       totalPairs++;
       // A pair is "suspicious" if u is even and v = u+1, or u is odd and
-      // v = u-1 — i.e., they sit in the same PoV bucket AND appear adjacent
+      // v = u-1 - i.e., they sit in the same PoV bucket AND appear adjacent
       // in the image. High rates of this specific adjacency, combined with
       // near-equal frequency in both directions, indicate LSB disruption.
       const sameBucket = Math.floor(u / 2) === Math.floor(v / 2);

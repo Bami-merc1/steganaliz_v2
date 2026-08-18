@@ -74,7 +74,7 @@ export default function EntropyHeatmap() {
       const w = bitmap.width;
       const h = bitmap.height;
 
-      // Canvas 1 — original image
+      // Canvas 1 - original image
       const origCanvas = document.createElement('canvas');
       origCanvas.width = w;
       origCanvas.height = h;
@@ -83,7 +83,7 @@ export default function EntropyHeatmap() {
       const imageData = origCtx.getImageData(0, 0, w, h);
       const pixels = new Uint8Array(imageData.data.buffer);
 
-      // Canvas 2 — heatmap
+      // Canvas 2 - heatmap
       const heatCanvas = document.createElement('canvas');
       heatCanvas.width = w;
       heatCanvas.height = h;

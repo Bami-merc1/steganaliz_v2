@@ -85,7 +85,7 @@ export default function EmbedPanel() {
     if (!file || !selectedEngine || !canEmbed) return;
 
     if (!checkRateLimit('embed', RATE_LIMITS.embed.maxCalls, RATE_LIMITS.embed.windowMs)) {
-      setErrorMessage('Rate limit reached — please wait a moment before embedding again.');
+      setErrorMessage('Rate limit reached - please wait a moment before embedding again.');
       return;
     }
 
@@ -177,7 +177,7 @@ export default function EmbedPanel() {
                 Technique: <span className="mono">{selectedEngine.technique}</span>
               </span>
               <span className="text-stgTextMuted">
-                No capacity limit — {formatBytes(messageBytes)} used
+                No capacity limit - {formatBytes(messageBytes)} used
               </span>
             </div>
           </div>
@@ -212,7 +212,7 @@ export default function EmbedPanel() {
 
       {selectedEngine?.requiresPassword ? (
         <p className="text-xs text-stgTextMuted">
-          This technique requires a password — it derives the pixel embedding
+          This technique requires a password - it derives the pixel embedding
           order, not just encryption.
         </p>
       ) : (

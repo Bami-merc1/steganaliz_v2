@@ -61,7 +61,7 @@ export function validateMimeType(file: File): ValidationResult {
     if (mime.startsWith(dangerous)) {
       return {
         valid: false,
-        reason: `MIME type "${file.type}" is not permitted as a carrier — potential script injection risk.`,
+        reason: `MIME type "${file.type}" is not permitted as a carrier - potential script injection risk.`,
       };
     }
   }
@@ -109,7 +109,7 @@ export async function validateMagicNumber(file: File): Promise<ValidationResult>
   if (!matches) {
     return {
       valid: false,
-      reason: `File signature does not match the expected ".${ext}" format — possible extension mismatch or corruption.`,
+      reason: `File signature does not match the expected ".${ext}" format - possible extension mismatch or corruption.`,
     };
   }
 
@@ -148,7 +148,7 @@ export async function validateZipExpansion(file: File): Promise<ValidationResult
         ) {
           return {
             valid: false,
-            reason: `Suspicious compression ratio (${Math.round(totalUncompressed / file.size)}× expansion) — possible zip bomb. File rejected.`,
+            reason: `Suspicious compression ratio (${Math.round(totalUncompressed / file.size)}× expansion) - possible zip bomb. File rejected.`,
           };
         }
 
@@ -158,7 +158,7 @@ export async function validateZipExpansion(file: File): Promise<ValidationResult
       }
     }
   } catch {
-    // malformed ZIP — let the engine handle it
+    // malformed ZIP - let the engine handle it
   }
 
   return { valid: true };

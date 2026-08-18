@@ -10,7 +10,7 @@ const TOOLS: { id: ForensicsTool; label: string; description: string }[] = [
     id: 'heatmap',
     label: 'Entropy Heatmap',
     description:
-      'Visualise per-block Shannon entropy as a colour heatmap — anomalous high-entropy regions appear as hot spots against the natural baseline.',
+      'Visualise per-block Shannon entropy as a colour heatmap - anomalous high-entropy regions appear as hot spots against the natural baseline.',
   },
   {
     id: 'bitplane',

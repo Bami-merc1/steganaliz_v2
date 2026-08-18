@@ -17,7 +17,7 @@ export const METADATA_PASSTHROUGH_EXTENSIONS = [
 
 async function stripImageMetadata(file: File): Promise<MetadataStripResult> {
   // Re-encoding through canvas drops EXIF, ICC profiles, XMP, and any
-  // trailing/embedded data outside the pixel buffer itself — canvas only
+  // trailing/embedded data outside the pixel buffer itself - canvas only
   // ever reads and re-emits raw pixels.
   const bitmap = await createImageBitmap(file);
   const canvas = document.createElement('canvas');
@@ -44,7 +44,7 @@ async function stripImageMetadata(file: File): Promise<MetadataStripResult> {
 }
 
 async function stripGenericMetadata(file: File): Promise<MetadataStripResult> {
-  // No format-specific parser yet for non-image types — passthrough for now.
+  // No format-specific parser yet for non-image types - passthrough for now.
   // Real per-format stripping (PDF metadata dict, DOCX core.xml, ID3 tags,
   // etc.) is on the roadmap; this keeps the contract stable in the meantime.
   return {
@@ -52,7 +52,7 @@ async function stripGenericMetadata(file: File): Promise<MetadataStripResult> {
     originalSize: file.size,
     strippedSize: file.size,
     bytesRemoved: 0,
-    method: 'passthrough — format-specific stripping not yet implemented',
+    method: 'passthrough - format-specific stripping not yet implemented',
   };
 }
 

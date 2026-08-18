@@ -6,7 +6,7 @@ import { eofAppendEmbed, eofAppendExtract } from './binary/eofAppend';
 import { wavLsbEmbed, wavLsbExtract } from './audio/wavLsb';
 
 export interface EngineEntry {
-  id: string; // unique across the whole registry — use this for selection, not `technique`
+  id: string; // unique across the whole registry - use this for selection, not `technique`
   technique: EmbedTechnique;
   label: string;
   embed: EmbedEngine;

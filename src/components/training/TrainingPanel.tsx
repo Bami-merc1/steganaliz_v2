@@ -42,7 +42,7 @@ export default function TrainingPanel() {
         `}
       >
         <aside className="w-64 bg-stgBg border-r border-stgBorder flex flex-col h-full overflow-y-auto">
-          {/* Close button row — mobile only */}
+          {/* Close button row - mobile only */}
           <div className="flex items-center justify-between px-4 pt-4 pb-1 md:hidden">
             <span className="text-xs font-semibold tracking-widest text-stgTextMuted uppercase">
               Curriculum

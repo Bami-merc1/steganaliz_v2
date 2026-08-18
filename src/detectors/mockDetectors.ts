@@ -11,7 +11,7 @@ import { metadataInspectorDetector } from './metadataInspectorDetector';
 import { signatureFingerprintDetector } from './signatureFingerprintDetector';
 
 // Every one of the 10 detectors specified in the project doc is now a real,
-// working implementation — no mocks remain. File kept as `mockDetectors.ts`
+// working implementation - no mocks remain. File kept as `mockDetectors.ts`
 // for import-path stability across the app; consider renaming to
 // `allDetectors.ts` in a later cleanup pass.
 export const MOCK_DETECTORS: Detector[] = [

@@ -17,7 +17,7 @@ async function getPixelBytes(file: File): Promise<Uint8Array | null> {
   }
 }
 
-// Measures "comb-like" irregularity in the histogram — LSB embedding tends
+// Measures "comb-like" irregularity in the histogram - LSB embedding tends
 // to smooth out fine-grained value-to-value variation (recall Week 5's
 // flattening effect), so we look at the average absolute difference between
 // ADJACENT histogram bins as a roughness measure, distinct from chi-square's

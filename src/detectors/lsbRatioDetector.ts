@@ -20,7 +20,7 @@ async function getPixelBytes(file: File): Promise<Uint8Array | null> {
 // Directly counts the proportion of LSBs that are 1 vs 0 across R/G/B
 // channels. Natural images have SOME inherent bias here (rarely an exact
 // 50/50 split), while a full-capacity random payload pushes this ratio
-// very close to 0.5 — a simpler, cruder cousin of chi-square's pair-based
+// very close to 0.5 - a simpler, cruder cousin of chi-square's pair-based
 // analysis, using a single aggregate statistic instead of per-pair math.
 function lsbRatioScore(bytes: Uint8Array): { score: number; ratio: number } {
   let onesCount = 0;

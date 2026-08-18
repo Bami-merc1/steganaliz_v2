@@ -1,4 +1,4 @@
-// Derives a seeded, deterministic pseudo-random sequence from a password —
+// Derives a seeded, deterministic pseudo-random sequence from a password -
 // NOT cryptographically secure on its own (this is a seeded PRNG, not a
 // CSPRNG), but the SEED itself comes from PBKDF2 (genuinely CSPRNG-backed
 // key derivation, same as crypto.ts), which is what actually protects it
@@ -11,12 +11,12 @@ async function deriveSeed(password: string, salt: Uint8Array): Promise<number> {
   const derivedBits = await crypto.subtle.deriveBits(
     { name: 'PBKDF2', salt: salt as BufferSource, iterations: 100_000, hash: 'SHA-256' },
     baseKey,
-    32 // 32 bits — enough entropy to seed a PRNG; the real security lives in PBKDF2's iteration count, not this width
+    32 // 32 bits - enough entropy to seed a PRNG; the real security lives in PBKDF2's iteration count, not this width
   );
   return new DataView(derivedBits).getUint32(0, false);
 }
 
-// A simple, fast, deterministic PRNG (mulberry32) — NOT for cryptographic
+// A simple, fast, deterministic PRNG (mulberry32) - NOT for cryptographic
 // use on its own. Its only job here is to deterministically reproduce the
 // same sequence given the same seed, so embed and extract agree.
 function mulberry32(seed: number): () => number {
@@ -30,7 +30,7 @@ function mulberry32(seed: number): () => number {
   };
 }
 
-// Fisher-Yates shuffle, driven by the seeded PRNG — produces a deterministic
+// Fisher-Yates shuffle, driven by the seeded PRNG - produces a deterministic
 // permutation of [0, 1, ..., count-1].
 function seededPermutation(count: number, rng: () => number): Uint32Array {
   const indices = new Uint32Array(count);

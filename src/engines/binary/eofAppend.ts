@@ -89,7 +89,7 @@ export const eofAppendExtract: ExtractEngine = {
 
     if (cursor + payloadLength > bytes.length) {
       throw new Error(
-        'Declared payload length exceeds remaining file data — file may be truncated.'
+        'Declared payload length exceeds remaining file data - file may be truncated.'
       );
     }
 

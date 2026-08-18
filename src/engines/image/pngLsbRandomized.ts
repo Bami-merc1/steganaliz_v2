@@ -109,7 +109,7 @@ export const pngLsbRandomizedEmbed: EmbedEngine = {
   embed: async (file: File, message: string, password?: string): Promise<EmbedResult> => {
     if (!password) {
       throw new Error(
-        'Randomized LSB requires a password — it doubles as the key for pixel-order derivation, not just encryption.'
+        'Randomized LSB requires a password - it doubles as the key for pixel-order derivation, not just encryption.'
       );
     }
 
@@ -164,7 +164,7 @@ export const pngLsbRandomizedEmbed: EmbedEngine = {
     const blobBytes = new Uint8Array(await blob.arrayBuffer());
     const withSalt = appendSaltChunk(blobBytes, orderSalt);
 
-    // Copy into a fresh ArrayBuffer — the only Blob-accepted buffer type
+    // Copy into a fresh ArrayBuffer - the only Blob-accepted buffer type
     // that TS 6 won't complain about, since new ArrayBuffer() never
     // produces a SharedArrayBuffer (unlike .buffer.slice() whose return
     // type is ArrayBuffer | SharedArrayBuffer in TS 6's DOM lib).
@@ -195,7 +195,7 @@ export const pngLsbRandomizedExtract: ExtractEngine = {
     const orderSalt = readSaltChunk(bytes);
     if (!orderSalt) {
       throw new Error(
-        'No randomized-LSB salt chunk found — this file was not embedded with this technique.'
+        'No randomized-LSB salt chunk found - this file was not embedded with this technique.'
       );
     }
 
@@ -224,7 +224,7 @@ export const pngLsbRandomizedExtract: ExtractEngine = {
 
     if (payloadLength === 0 || HEADER_BITS + payloadLength * 8 > totalUsableChannels) {
       throw new Error(
-        'No valid payload found at the derived pixel order — likely an incorrect password.'
+        'No valid payload found at the derived pixel order - likely an incorrect password.'
       );
     }
 

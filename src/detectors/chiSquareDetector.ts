@@ -13,17 +13,17 @@ async function getPixelBytes(file: File): Promise<Uint8Array | null> {
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     return new Uint8Array(imageData.data.buffer);
   } catch {
-    return null; // not a decodable image — detector will report not-applicable
+    return null; // not a decodable image - detector will report not-applicable
   }
 }
 
 // Chi-square test on PoV (pairs of values) distribution. Returns a 0-100
-// suspicion score derived from how closely the even/odd pairs converge —
+// suspicion score derived from how closely the even/odd pairs converge -
 // closer convergence than natural images typically show implies LSB tampering.
 function chiSquarePoVScore(bytes: Uint8Array): number {
   const observed = new Uint32Array(256);
   for (let i = 0; i < bytes.length; i += 4) {
-    // sample R, G, B channels only — skip alpha (index i+3)
+    // sample R, G, B channels only - skip alpha (index i+3)
     observed[bytes[i]]++;
     observed[bytes[i + 1]]++;
     observed[bytes[i + 2]]++;

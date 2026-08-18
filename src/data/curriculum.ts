@@ -29,7 +29,7 @@ export const CURRICULUM: Track[] = [
   },
   {
     id: 'phase-2',
-    title: 'Phase 2: Steganography — Data Embedding Methodologies',
+    title: 'Phase 2: Steganography - Data Embedding Methodologies',
     level: 'intermediate',
     modules: [
       { id: 'week-5', title: 'Week 5: Spatial Domain Steganography (LSB Core)', description: 'HVS limits, LSB substitution, histogram impact.', lessons: WEEK_5_LESSONS },
@@ -41,11 +41,11 @@ export const CURRICULUM: Track[] = [
   },
   {
     id: 'phase-3',
-    title: 'Phase 3: Steganalysis — Detection & Countermeasures',
+    title: 'Phase 3: Steganalysis - Detection & Countermeasures',
     level: 'advanced',
     modules: [
       { id: 'week-10', title: 'Week 10: Visual Steganalysis & Structural Breakdown', description: 'Bitplane isolation, artificial entropy, visual attacks.', lessons: WEEK_10_LESSONS },
-      { id: 'week-11', title: 'Week 11: Statistical Steganalysis — The Chi-Square Test', description: 'Pairs of Values, the flattening effect, chi-square goodness-of-fit.', lessons: WEEK_11_LESSONS },
+      { id: 'week-11', title: 'Week 11: Statistical Steganalysis - The Chi-Square Test', description: 'Pairs of Values, the flattening effect, chi-square goodness-of-fit.', lessons: WEEK_11_LESSONS },
       { id: 'week-12', title: 'Week 12: Advanced Steganalysis (RS Analysis)', description: 'Regular-Singular analysis, dual-masking, payload length estimation.', lessons: WEEK_12_LESSONS },
       { id: 'week-13', title: 'Week 13: File Scrapers, Carvers, & Frameworks', description: 'Heuristic carving, Binwalk/Scalpel, signature databases.', lessons: WEEK_13_LESSONS },
       { id: 'week-14', title: 'Week 14: Machine Learning in Steganalysis', description: 'SRM feature extraction, CNN classification.', lessons: WEEK_14_LESSONS },

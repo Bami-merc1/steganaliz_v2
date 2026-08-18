@@ -2,7 +2,7 @@
 // (onload, onerror, etc.) that execute when rendered as image/svg+xml.
 // This sanitizer strips those before any SVG is passed to the engine layer,
 // per the project doc's XSS prevention defense.
-// Note: this sanitizer runs on SVG CARRIERS only — extracted payloads are
+// Note: this sanitizer runs on SVG CARRIERS only - extracted payloads are
 // always rendered as inert plaintext (see ExtractPanel), not as SVG.
 
 const DANGEROUS_ELEMENTS = ['script', 'foreignObject', 'use'];

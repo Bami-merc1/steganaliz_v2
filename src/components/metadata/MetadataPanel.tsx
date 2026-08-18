@@ -63,7 +63,7 @@ export default function MetadataPanel() {
           permanently discarding EXIF data (GPS coordinates, camera model, timestamps),
           ICC colour profiles, XMP metadata, and any non-standard or appended chunk data.
           The output may be slightly larger than the input because PNG re-encoding
-          is always lossless — the value is in removing hidden data, not file size reduction.
+          is always lossless - the value is in removing hidden data, not file size reduction.
         </p>
         <p className="text-stgTextSecondary text-xs leading-relaxed">
           For <strong>other formats</strong>: format-specific stripping (PDF metadata dict,
@@ -118,7 +118,7 @@ export default function MetadataPanel() {
           </div>
           {result.strippedSize > result.originalSize && (
             <p className="text-xs text-stgTextMuted pt-1 border-t border-stgBorder">
-              Output is larger than input — this is normal for PNG re-encoding. The image content
+              Output is larger than input - this is normal for PNG re-encoding. The image content
               is identical; the increase reflects PNG's lossless compression of the clean pixel buffer.
             </p>
           )}

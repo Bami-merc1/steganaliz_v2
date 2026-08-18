@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export type TopLevelView = 'workbench' | 'forensics' | 'training';
+export type TopLevelView = 'workbench' | 'forensics' | 'training' | 'docs';
 
 interface Props {
   active: TopLevelView;
@@ -11,6 +11,7 @@ const TABS: { id: TopLevelView; label: string }[] = [
   { id: 'workbench', label: 'WORKBENCH' },
   { id: 'forensics', label: 'FORENSICS' },
   { id: 'training',  label: 'TRAINING'  },
+  { id: 'docs',      label: 'DOCS'      },
 ];
 
 export default function Navbar({ active, onSelect }: Props) {

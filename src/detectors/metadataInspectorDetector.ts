@@ -43,7 +43,7 @@ export const metadataInspectorDetector: Detector = {
         score: 0,
         label: labelForScore(0),
         applicable: false,
-        details: 'File is not a valid PNG — chunk-level inspection not applicable.',
+        details: 'File is not a valid PNG - chunk-level inspection not applicable.',
       };
     }
 

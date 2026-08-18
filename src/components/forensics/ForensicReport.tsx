@@ -22,7 +22,7 @@ interface ReportData {
 function buildReportText(report: ReportData): string {
   const lines: string[] = [];
   lines.push('═══════════════════════════════════════════════════════════════');
-  lines.push('  STEGANALIZ v1.0 — FORENSIC ANALYSIS REPORT');
+  lines.push('  STEGANALIZ v1.0 - FORENSIC ANALYSIS REPORT');
   lines.push('═══════════════════════════════════════════════════════════════');
   lines.push('');
   lines.push('CASE INFORMATION');
@@ -31,7 +31,7 @@ function buildReportText(report: ReportData): string {
   lines.push(`File size      : ${formatBytes(report.fileSize)} (${report.fileSize} bytes)`);
   lines.push(`File type      : ${report.fileType}`);
   lines.push(`Analysis time  : ${report.analysisTimestamp}`);
-  lines.push(`Processing     : Client-side only — no data transmitted`);
+  lines.push(`Processing     : Client-side only - no data transmitted`);
   lines.push('');
   lines.push('OVERALL VERDICT');
   lines.push('─────────────────────────────────────────────────────────────');
@@ -111,7 +111,7 @@ export default function ForensicReport() {
         hasEofPayload: hasEof,
       });
     } catch {
-      setErrorMessage('Analysis failed — check the browser console for details.');
+      setErrorMessage('Analysis failed - check the browser console for details.');
     } finally {
       setIsGenerating(false);
     }

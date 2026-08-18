@@ -7,7 +7,7 @@ interface KnownSignature {
 }
 
 // Known byte-sequence fingerprints left by specific steganography tools or
-// techniques. Currently limited to this project's own engines' markers —
+// techniques. Currently limited to this project's own engines' markers -
 // an honest scope: claiming to fingerprint third-party tools (e.g. classic
 // tools like OpenStego or Steghide) would require verified samples of their
 // actual output to derive real signatures from, which isn't available here.

@@ -14,6 +14,7 @@ import TrainingPanel from '../training/TrainingPanel';
 import ForensicsPanel from '../forensics/ForensicsPanel';
 import { useEffect } from 'react';
 import TermsModal from './TermsModal';
+import DocsPanel from '../docs/DocsPanel';
 
 export type ModuleId =
   | 'embed'
@@ -48,7 +49,7 @@ const MODULE_META: Record<ModuleId, { title: string; subtitle: string }> = {
   },
   history: {
     title: 'History',
-    subtitle: 'Session-local audit trail. Cleared when this tab closes — no data is ever persisted.',
+    subtitle: 'Session-local audit trail. Cleared when this tab closes - no data is ever persisted.',
   },
   ctf: {
     title: 'CTF Mode',
@@ -78,7 +79,7 @@ function WorkbenchView() {
         />
       )}
 
-      {/* Sidebar — hidden on mobile unless open */}
+      {/* Sidebar - hidden on mobile unless open */}
       <div className={`
         fixed md:relative z-30 md:z-auto
         top-0 md:top-auto left-0 md:left-auto
@@ -142,6 +143,7 @@ export default function AppShell() {
         {activeView === 'workbench'  && <WorkbenchView />}
         {activeView === 'forensics'  && <ForensicsPanel />}
         {activeView === 'training'   && <TrainingPanel />}
+        {activeView === 'docs' && <DocsPanel />}
       </div>
 
       <Footer />

@@ -40,7 +40,7 @@ export default function BatchPanel() {
     setIsRunning(true);
 
     // Collect successful embed outputs here instead of downloading each one
-    // individually — zipped into a single archive at the end.
+    // individually - zipped into a single archive at the end.
     const zipEntries: Zippable = {};
     let embedSuccessCount = 0;
 

@@ -34,7 +34,7 @@ export default function DetectPanel() {
     if (!file) return;
 
     if (!checkRateLimit('detect', RATE_LIMITS.detect.maxCalls, RATE_LIMITS.detect.windowMs)) {
-      setErrorMessage('Rate limit reached — please wait a moment before scanning again.');
+      setErrorMessage('Rate limit reached - please wait a moment before scanning again.');
       return;
     }
 

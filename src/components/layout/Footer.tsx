@@ -12,7 +12,7 @@ export default function Footer() {
           <div className="flex items-center gap-2">
             <span className="font-bold text-white">Steganaliz v1.0</span>
             <span className="text-white/40 hidden sm:inline">
-              — browser-based steganography &amp; steganalysis workbench
+              - browser-based steganography &amp; steganalysis workbench
             </span>
           </div>
           <div className="flex flex-wrap items-center gap-2 md:gap-4">
