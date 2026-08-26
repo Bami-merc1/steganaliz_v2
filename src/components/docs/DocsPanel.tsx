@@ -121,7 +121,6 @@ export default function DocsPanel() {
             {/* Prev / Next navigation */}
             <div className="mt-12 pt-6 border-t border-stgBorder flex items-center justify-between gap-4">
               {(() => {
-                // Build flat list of all sections
                 const flat: { chapterId: string; section: DocSection }[] = [];
                 DOCUMENTATION.forEach((ch) =>
                   ch.sections.forEach((s) => flat.push({ chapterId: ch.id, section: s }))

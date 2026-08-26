@@ -73,6 +73,8 @@ export async function validateMagicNumber(file: File): Promise<ValidationResult>
   const ext = file.name.split('.').pop()?.toLowerCase() ?? '';
   const candidates = MAGIC_NUMBERS[ext];
 
+  // No known signature for this extension → pass through.
+  // We only reject when we KNOW what it should look like and it doesn't match.
   if (!candidates) return { valid: true };
 
   const headerBytes = new Uint8Array(await file.slice(0, 16).arrayBuffer());
@@ -80,10 +82,7 @@ export async function validateMagicNumber(file: File): Promise<ValidationResult>
   if (ext === 'mp4') {
     const ftypMarker = new TextDecoder().decode(headerBytes.slice(4, 8));
     if (ftypMarker !== 'ftyp') {
-      return {
-        valid: false,
-        reason: 'File does not appear to be a valid MP4 (no ftyp marker).',
-      };
+      return { valid: false, reason: 'File does not appear to be a valid MP4 (no ftyp marker).' };
     }
     return { valid: true };
   }
@@ -94,10 +93,7 @@ export async function validateMagicNumber(file: File): Promise<ValidationResult>
       new Uint8Array(await file.slice(8, 12).arrayBuffer())
     );
     if (riff !== 'RIFF' || wave !== 'WAVE') {
-      return {
-        valid: false,
-        reason: 'File does not appear to be a valid WAV (RIFF/WAVE mismatch).',
-      };
+      return { valid: false, reason: 'File does not appear to be a valid WAV (RIFF/WAVE mismatch).' };
     }
     return { valid: true };
   }
@@ -109,7 +105,7 @@ export async function validateMagicNumber(file: File): Promise<ValidationResult>
   if (!matches) {
     return {
       valid: false,
-      reason: `File signature does not match the expected ".${ext}" format - possible extension mismatch or corruption.`,
+      reason: `File signature does not match the expected ".${ext}" format — possible extension mismatch or corruption.`,
     };
   }
 

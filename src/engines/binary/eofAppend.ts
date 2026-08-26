@@ -1,5 +1,6 @@
 import type { EmbedEngine, ExtractEngine, EmbedResult } from '../types';
 import { encryptPayload, decryptPayload } from '../../utils/crypto';
+import { SUPPORTED_CARRIER_EXTENSIONS } from '../../utils/constants';
 
 const MAGIC_MARKER = new TextEncoder().encode('STGZAPND');
 const FLAG_BYTES = 1;
@@ -18,10 +19,7 @@ function findMagicMarker(bytes: Uint8Array): number {
 
 export const eofAppendEmbed: EmbedEngine = {
   technique: 'eof-append',
-  supportedExtensions: [
-    'png', 'bmp', 'jpg', 'jpeg', 'pdf', 'docx', 'pptx', 'mp3', 'mp4', 'wav',
-    'exe', 'bin', 'iso', 'zip',
-  ],
+  supportedExtensions: SUPPORTED_CARRIER_EXTENSIONS,
 
   getCapacityBytes: async (): Promise<number> => {
     return Number.MAX_SAFE_INTEGER;
@@ -66,6 +64,7 @@ export const eofAppendEmbed: EmbedEngine = {
 export const eofAppendExtract: ExtractEngine = {
   technique: 'eof-append',
   supportedExtensions: eofAppendEmbed.supportedExtensions,
+
 
   extract: async (file: File, password?: string): Promise<string> => {
     const bytes = new Uint8Array(await file.arrayBuffer());

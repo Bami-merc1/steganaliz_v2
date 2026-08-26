@@ -4,6 +4,7 @@ import { pngLsbRandomizedEmbed, pngLsbRandomizedExtract } from './image/pngLsbRa
 import { pngTextChunkEmbed, pngTextChunkExtract } from './image/pngTextChunk';
 import { eofAppendEmbed, eofAppendExtract } from './binary/eofAppend';
 import { wavLsbEmbed, wavLsbExtract } from './audio/wavLsb';
+import { SUPPORTED_CARRIER_EXTENSIONS } from '../utils/constants';
 
 export interface EngineEntry {
   id: string; // unique across the whole registry - use this for selection, not `technique`
@@ -53,8 +54,14 @@ export const ENGINE_REGISTRY: EngineEntry[] = [
     id: 'eof-append',
     technique: 'eof-append',
     label: 'EOF append (any file type)',
-    embed: eofAppendEmbed,
-    extract: eofAppendExtract,
+    embed: {
+      ...eofAppendEmbed,
+      supportedExtensions: SUPPORTED_CARRIER_EXTENSIONS,
+    },
+    extract: {
+      ...eofAppendExtract,
+      supportedExtensions: SUPPORTED_CARRIER_EXTENSIONS,
+    },
     isUnlimitedCapacity: true,
   },
 ];

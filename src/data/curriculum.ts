@@ -14,6 +14,12 @@ import { WEEK_12_LESSONS } from './lessons/week12';
 import { WEEK_13_LESSONS } from './lessons/week13';
 import { WEEK_14_LESSONS } from './lessons/week14';
 import { WEEK_15_LESSONS } from './lessons/week15';
+import { WEEK_16_LESSONS } from './lessons/week16';
+import { WEEK_17_LESSONS } from './lessons/week17';
+import { WEEK_18_LESSONS } from './lessons/week18';
+import { WEEK_19_LESSONS } from './lessons/week19';
+import { WEEK_20_LESSONS } from './lessons/week20';
+import { WEEK_21_LESSONS } from './lessons/week21';
 
 export const CURRICULUM: Track[] = [
   {
@@ -53,7 +59,20 @@ export const CURRICULUM: Track[] = [
   },
   {
     id: 'phase-4',
-    title: 'Phase 4: Final Evaluation',
+    title: 'Phase 4: Cryptography & Encryption',
+    level: 'advanced',
+    modules: [
+      { id: 'week-16', title: 'Week 16: Data Fundamentals & Encoding Systems', description: 'Binary/hex/XOR revisited for crypto, Base64, URL encoding, UTF-8/16, encoding vs. encryption.', lessons: WEEK_16_LESSONS },
+      { id: 'week-17', title: 'Week 17: Hashing & Data Integrity', description: 'Hash properties, avalanche effect, MD5/SHA-1 vs SHA-256/SHA-3, salting, peppering, KDFs (PBKDF2/bcrypt/Argon2), HMAC.', lessons: WEEK_17_LESSONS },
+      { id: 'week-18', title: 'Week 18: Classical & Stream Ciphers', description: 'Caesar, Vigenère, Kasiski examination, the One-Time Pad, stream vs. block ciphers.', lessons: WEEK_18_LESSONS },
+      { id: 'week-19', title: 'Week 19: Modern Block Ciphers (AES) & Modes of Operation', description: 'SPNs, S-Boxes, ShiftRows/MixColumns, ECB/CBC/GCM, authenticated encryption.', lessons: WEEK_19_LESSONS },
+      { id: 'week-20', title: 'Week 20: Asymmetric Encryption & Key Exchange', description: 'RSA, elliptic curves, Diffie-Hellman, hybrid encryption.', lessons: WEEK_20_LESSONS },
+      { id: 'week-21', title: 'Week 21: Digital Signatures & PKI', description: 'Signing vs. encrypting, Certificate Authorities, the TLS handshake.', lessons: WEEK_21_LESSONS },
+    ],
+  },
+  {
+    id: 'phase-5',
+    title: 'Phase 5: Final Evaluation',
     level: 'advanced',
     modules: [
       { id: 'week-15', title: 'Week 15: Capstone Matrix Presentation', description: 'Theoretical exam + CTF-style disk image forensic capstone.', lessons: WEEK_15_LESSONS },

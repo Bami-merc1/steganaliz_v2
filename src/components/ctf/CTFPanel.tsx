@@ -47,7 +47,6 @@ export default function CTFPanel() {
     }
 
     for (const engine of engines) {
-      // Try unencrypted first for this engine
       try {
         const message = await engine.extract.extract(file);
         results.push({
@@ -68,10 +67,7 @@ export default function CTFPanel() {
         });
         setAttempts([...results]);
 
-        // Only worth trying the wordlist against this engine if the failure
-        // was specifically "needs a password" - a different failure (e.g.
-        // "no valid payload detected") means this engine's technique isn't
-        // present at all, so cycling passwords against it would waste time.
+        
         if (!requiresPassword || passwords.length === 0) continue;
 
         for (const pw of passwords) {
