@@ -2,18 +2,21 @@ import type { EmbedEngine, ExtractEngine, EmbedTechnique } from './types';
 import { pngLsbEmbed, pngLsbExtract } from './image/pngLsb';
 import { pngLsbRandomizedEmbed, pngLsbRandomizedExtract } from './image/pngLsbRandomized';
 import { pngTextChunkEmbed, pngTextChunkExtract } from './image/pngTextChunk';
+import { jpegComEmbed, jpegComExtract } from './image/jpegDct';
 import { eofAppendEmbed, eofAppendExtract } from './binary/eofAppend';
 import { wavLsbEmbed, wavLsbExtract } from './audio/wavLsb';
-import { SUPPORTED_CARRIER_EXTENSIONS } from '../utils/constants';
+import { docxEmbed, docxExtract } from './document/docxEmbed';
+import { pdfEmbed, pdfExtract } from './document/pdfEmbed';
+import { zeroWidthEmbed, zeroWidthExtract } from './text/zeroWidthEmbed';
 
 export interface EngineEntry {
-  id: string; // unique across the whole registry - use this for selection, not `technique`
+  id: string;
   technique: EmbedTechnique;
   label: string;
   embed: EmbedEngine;
   extract: ExtractEngine;
   isUnlimitedCapacity: boolean;
-  requiresPassword?: boolean; // true for engines where the password is load-bearing, not just confidentiality
+  requiresPassword?: boolean;
 }
 
 export const ENGINE_REGISTRY: EngineEntry[] = [
@@ -43,6 +46,14 @@ export const ENGINE_REGISTRY: EngineEntry[] = [
     isUnlimitedCapacity: true,
   },
   {
+    id: 'jpeg-com',
+    technique: 'metadata-injection',
+    label: 'COM marker injection (JPEG)',
+    embed: jpegComEmbed,
+    extract: jpegComExtract,
+    isUnlimitedCapacity: true,
+  },
+  {
     id: 'wav-lsb',
     technique: 'lsb',
     label: 'LSB (audio samples)',
@@ -51,17 +62,35 @@ export const ENGINE_REGISTRY: EngineEntry[] = [
     isUnlimitedCapacity: false,
   },
   {
+    id: 'docx-custom-xml',
+    technique: 'metadata-injection',
+    label: 'Custom XML part (DOCX/PPTX/ODT)',
+    embed: docxEmbed,
+    extract: docxExtract,
+    isUnlimitedCapacity: true,
+  },
+  {
+    id: 'pdf-xmp',
+    technique: 'metadata-injection',
+    label: 'XMP metadata injection (PDF)',
+    embed: pdfEmbed,
+    extract: pdfExtract,
+    isUnlimitedCapacity: true,
+  },
+  {
+    id: 'zero-width-text',
+    technique: 'zero-width',
+    label: 'Zero-width characters (text/markdown/HTML)',
+    embed: zeroWidthEmbed,
+    extract: zeroWidthExtract,
+    isUnlimitedCapacity: false,
+  },
+  {
     id: 'eof-append',
     technique: 'eof-append',
     label: 'EOF append (any file type)',
-    embed: {
-      ...eofAppendEmbed,
-      supportedExtensions: SUPPORTED_CARRIER_EXTENSIONS,
-    },
-    extract: {
-      ...eofAppendExtract,
-      supportedExtensions: SUPPORTED_CARRIER_EXTENSIONS,
-    },
+    embed: eofAppendEmbed,
+    extract: eofAppendExtract,
     isUnlimitedCapacity: true,
   },
 ];
@@ -70,19 +99,16 @@ function getExtension(fileName: string): string {
   return fileName.split('.').pop()?.toLowerCase() ?? '';
 }
 
-
 export function autoSelectEngine(fileName: string): EngineEntry | null {
   const ext = getExtension(fileName);
-
-  const sequentialLsb = ENGINE_REGISTRY.find((e) => e.id === 'png-lsb-sequential')!;
-  if (sequentialLsb.embed.supportedExtensions.includes(ext)) return sequentialLsb;
-
-  const wavLsb = ENGINE_REGISTRY.find((e) => e.id === 'wav-lsb')!;
-  if (wavLsb.embed.supportedExtensions.includes(ext)) return wavLsb;
-
-  const eofEntry = ENGINE_REGISTRY.find((e) => e.id === 'eof-append')!;
-  if (eofEntry.embed.supportedExtensions.includes(ext)) return eofEntry;
-
+  const preferred = [
+    'png-lsb-sequential', 'wav-lsb', 'jpeg-com',
+    'pdf-xmp', 'docx-custom-xml', 'zero-width-text', 'eof-append',
+  ];
+  for (const id of preferred) {
+    const e = ENGINE_REGISTRY.find((x) => x.id === id)!;
+    if (e.embed.supportedExtensions.includes(ext)) return e;
+  }
   return null;
 }
 

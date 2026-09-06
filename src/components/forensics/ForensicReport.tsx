@@ -149,6 +149,36 @@ export default function ForensicReport() {
     }
   };
 
+  const downloadJson = () => {
+    if (!report) return;
+    const json = JSON.stringify({
+      generatedBy: 'Steganaliz v1.0',
+      timestamp: report.analysisTimestamp,
+      file: { name: report.fileName, size: report.fileSize, type: report.fileType },
+      verdict: {
+        label: report.verdict.overallLabel,
+        score: report.verdict.overallScore,
+        eofPayloadDetected: report.hasEofPayload,
+      },
+      detectors: report.verdict.results.map((r) => ({
+        id: r.detectorId,
+        name: r.detectorName,
+        score: r.score,
+        label: r.label,
+        applicable: r.applicable,
+        details: r.details ?? null,
+      })),
+      validationNotes: report.validationNotes,
+    }, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `steganaliz_report_${report.fileName.replace(/[^a-z0-9_-]/gi, '_')}_${Date.now()}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="max-w-2xl space-y-5">
       <Dropzone onFileSelected={handleFile} acceptedLabel="any supported carrier format" />
@@ -185,6 +215,9 @@ export default function ForensicReport() {
             </Button>
             <Button onClick={downloadPdf} disabled={isExportingPdf}>
               {isExportingPdf ? 'Generating PDF…' : 'Download PDF report'}
+            </Button>
+            <Button variant="secondary" onClick={downloadJson}>
+              Download JSON (API)
             </Button>
           </div>
         </>

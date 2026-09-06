@@ -1,3 +1,5 @@
+import { PDFDocument } from 'pdf-lib';
+
 export interface MetadataStripResult {
   blob: Blob;
   originalSize: number;
@@ -6,19 +8,16 @@ export interface MetadataStripResult {
   method: string;
 }
 
-const IMAGE_EXTENSIONS = ['png', 'bmp', 'jpg', 'jpeg', 'pdf', 'docx', 'mp3', 'mp4', 'wav', 'svg', 'txt', 'md', 'html', 'xml', 'csv',];
+const IMAGE_EXTENSIONS = ['png', 'bmp', 'jpg', 'jpeg', 'gif', 'webp'];
+const PDF_EXTENSIONS   = ['pdf'];
+const MP3_EXTENSIONS   = ['mp3'];
 
-export const METADATA_STRIPPABLE_EXTENSIONS = IMAGE_EXTENSIONS;
-export const METADATA_PASSTHROUGH_EXTENSIONS = [
-  'png', 'bmp', 'jpg', 'jpeg',
-  'pdf', 'docx', 'mp3', 'mp4', 'wav', 'svg',
-  'txt', 'md', 'html', 'xml', 'csv',
+export const METADATA_STRIPPABLE_EXTENSIONS = [
+  ...IMAGE_EXTENSIONS, ...PDF_EXTENSIONS, ...MP3_EXTENSIONS,
+  'svg', 'txt', 'md', 'html', 'xml', 'csv', 'wav', 'mp4', 'docx',
 ];
 
 async function stripImageMetadata(file: File): Promise<MetadataStripResult> {
-  // Re-encoding through canvas drops EXIF, ICC profiles, XMP, and any
-  // trailing/embedded data outside the pixel buffer itself - canvas only
-  // ever reads and re-emits raw pixels.
   const bitmap = await createImageBitmap(file);
   const canvas = document.createElement('canvas');
   canvas.width = bitmap.width;
@@ -26,14 +25,9 @@ async function stripImageMetadata(file: File): Promise<MetadataStripResult> {
   const ctx = canvas.getContext('2d');
   if (!ctx) throw new Error('Canvas 2D context unavailable');
   ctx.drawImage(bitmap, 0, 0);
-
   const blob: Blob = await new Promise((resolve, reject) => {
-    canvas.toBlob((b) => {
-      if (b) resolve(b);
-      else reject(new Error('Canvas toBlob failed'));
-    }, 'image/png');
+    canvas.toBlob((b) => b ? resolve(b) : reject(new Error('Canvas toBlob failed')), 'image/png');
   });
-
   return {
     blob,
     originalSize: file.size,
@@ -43,28 +37,87 @@ async function stripImageMetadata(file: File): Promise<MetadataStripResult> {
   };
 }
 
+async function stripPdfMetadata(file: File): Promise<MetadataStripResult> {
+  const bytes = await file.arrayBuffer();
+  const doc = await PDFDocument.load(bytes, { ignoreEncryption: true });
+
+  // Wipe all standard PDF metadata fields
+  doc.setTitle('');
+  doc.setAuthor('');
+  doc.setSubject('');
+  doc.setKeywords([]);
+  doc.setProducer('');
+  doc.setCreator('');
+  // pdf-lib does not expose raw XMP stream deletion, but clearing Keywords
+  // removes our own payload injection point and all other standard fields.
+
+  const out = await doc.save();
+  const blob = new Blob([out], { type: 'application/pdf' });
+  return {
+    blob,
+    originalSize: file.size,
+    strippedSize: blob.size,
+    bytesRemoved: Math.max(0, file.size - blob.size),
+    method: 'pdf-lib metadata field clear (Title, Author, Subject, Keywords, Producer, Creator)',
+  };
+}
+
+function stripMp3Id3(bytes: Uint8Array): Uint8Array {
+  let start = 0;
+  // Strip ID3v2 at the start: header is "ID3" + 2 version bytes + flags + 4-byte syncsafe size
+  if (bytes[0] === 0x49 && bytes[1] === 0x44 && bytes[2] === 0x33) {
+    const size =
+      ((bytes[6] & 0x7f) << 21) |
+      ((bytes[7] & 0x7f) << 14) |
+      ((bytes[8] & 0x7f) << 7)  |
+       (bytes[9] & 0x7f);
+    start = 10 + size;
+  }
+  // Strip ID3v1 at the end: last 128 bytes starting with "TAG"
+  let end = bytes.length;
+  if (
+    bytes.length >= 128 &&
+    bytes[bytes.length - 128] === 0x54 &&
+    bytes[bytes.length - 127] === 0x41 &&
+    bytes[bytes.length - 126] === 0x47
+  ) {
+    end = bytes.length - 128;
+  }
+  return bytes.slice(start, end);
+}
+
+async function stripMp3Metadata(file: File): Promise<MetadataStripResult> {
+  const bytes = new Uint8Array(await file.arrayBuffer());
+  const stripped = stripMp3Id3(bytes);
+  const blob = new Blob([stripped], { type: 'audio/mpeg' });
+  return {
+    blob,
+    originalSize: file.size,
+    strippedSize: blob.size,
+    bytesRemoved: Math.max(0, file.size - blob.size),
+    method: 'ID3v1 + ID3v2 tag removal (byte-level)',
+  };
+}
+
 async function stripGenericMetadata(file: File): Promise<MetadataStripResult> {
-  // No format-specific parser yet for non-image types - passthrough for now.
-  // Real per-format stripping (PDF metadata dict, DOCX core.xml, ID3 tags,
-  // etc.) is on the roadmap; this keeps the contract stable in the meantime.
   return {
     blob: file.slice(0, file.size, file.type),
     originalSize: file.size,
     strippedSize: file.size,
     bytesRemoved: 0,
-    method: 'passthrough - format-specific stripping not yet implemented',
+    method: 'passthrough — format-specific stripping not yet implemented for this type',
   };
 }
 
 export async function stripMetadata(file: File): Promise<MetadataStripResult> {
   const ext = file.name.split('.').pop()?.toLowerCase() ?? '';
-  if (IMAGE_EXTENSIONS.includes(ext)) {
-    return stripImageMetadata(file);
-  }
+  if (IMAGE_EXTENSIONS.includes(ext)) return stripImageMetadata(file);
+  if (PDF_EXTENSIONS.includes(ext))   return stripPdfMetadata(file);
+  if (MP3_EXTENSIONS.includes(ext))   return stripMp3Metadata(file);
   return stripGenericMetadata(file);
 }
 
 export function isMetadataStrippable(fileName: string): boolean {
   const ext = fileName.split('.').pop()?.toLowerCase() ?? '';
-  return IMAGE_EXTENSIONS.includes(ext);
+  return [...IMAGE_EXTENSIONS, ...PDF_EXTENSIONS, ...MP3_EXTENSIONS].includes(ext);
 }

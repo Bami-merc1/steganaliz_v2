@@ -55,44 +55,33 @@ export default function BatchPanel() {
             )
           );
         } else {
+          // Route to the best engine for this file type via the registry
           const engine = autoSelectEngine(item.file.name);
-
-          if (!engine) {
-            throw new Error(`No embedding engine supports .${item.file.name.split('.').pop()}`);
-          }
-
+          if (!engine) throw new Error('No embedding engine supports this format');
           if (!message) throw new Error('No message set for batch embed');
+          if (engine.requiresPassword) throw new Error('This technique requires a password — use the Embed tab directly');
 
           const result = await engine.embed.embed(item.file, message);
           const buffer = new Uint8Array(await result.blob.arrayBuffer());
-
+          const ext = item.file.name.split('.').pop() ?? 'bin';
           const dot = item.file.name.lastIndexOf('.');
           const baseName = dot >= 0 ? item.file.name.slice(0, dot) : item.file.name;
-          const outExt = ['png-lsb-sequential', 'png-lsb-randomized'].includes(engine.id)
-            ? 'png'
-            : (item.file.name.split('.').pop() ?? 'bin');
 
-          let entryName = `${baseName}_stego.${outExt}`;
+          let entryName = `${baseName}_stego.${ext}`;
           let suffix = 1;
           while (zipEntries[entryName]) {
-            entryName = `${baseName}_stego_${suffix++}.${outExt}`;
+            entryName = `${baseName}_stego_${suffix}.${ext}`;
+            suffix++;
           }
           zipEntries[entryName] = buffer;
           embedSuccessCount++;
-
-          setItems((prev) =>
-            prev.map((i) => (i.id === item.id ? { ...i, status: 'done' } : i))
-          );
+          setItems((prev) => prev.map((i) => (i.id === item.id ? { ...i, status: 'done' } : i)));
         }
       } catch (err) {
         setItems((prev) =>
           prev.map((i) =>
             i.id === item.id
-              ? {
-                  ...i,
-                  status: 'error',
-                  errorMessage: err instanceof Error ? err.message : 'Failed',
-                }
+              ? { ...i, status: 'error', errorMessage: err instanceof Error ? err.message : 'Failed' }
               : i
           )
         );
@@ -101,7 +90,9 @@ export default function BatchPanel() {
 
     if (mode === 'embed' && embedSuccessCount > 0) {
       const zipped = zipSync(zipEntries, { level: 6 });
-      const zipBlob = new Blob([zipped], { type: 'application/zip' });
+      const safe = new Uint8Array(zipped.length);
+      safe.set(zipped);
+      const zipBlob = new Blob([safe], { type: 'application/zip' });
       const url = URL.createObjectURL(zipBlob);
       const a = document.createElement('a');
       a.href = url;
@@ -113,10 +104,9 @@ export default function BatchPanel() {
     addHistoryEntry({
       action: mode === 'embed' ? 'batch-embed' : 'batch-detect',
       fileName: `${items.length} files`,
-      detail:
-        mode === 'embed'
-          ? `${embedSuccessCount} of ${items.length} embedded → downloaded as zip`
-          : 'Batch detect completed',
+      detail: mode === 'embed'
+        ? `${embedSuccessCount} of ${items.length} embedded, downloaded as one zip`
+        : 'Batch detect completed',
     });
 
     setIsRunning(false);
@@ -131,8 +121,8 @@ export default function BatchPanel() {
             onClick={() => setMode(m)}
             className={`px-4 py-2 text-sm rounded border capitalize ${
               mode === m
-                ? 'border-stgOrange bg-stgOrangeSoft text-black font-semibold'
-                : 'border-stgBorderStrong text-stgTextSecondary hover:bg-white'
+                ? 'border-stgOrange bg-stgOrangeSoft/40 text-stgTextPrimary font-medium'
+                : 'border-stgBorderStrong text-stgTextSecondary hover:bg-stgSurface'
             }`}
           >
             {m}
@@ -143,38 +133,32 @@ export default function BatchPanel() {
       {mode === 'embed' && (
         <div>
           <label className="block text-xs font-medium tracking-wide text-stgTextSecondary mb-1.5">
-            MESSAGE (applied to every file — EOF-append used for non-image formats)
+            MESSAGE (applied to every file in the batch)
           </label>
           <textarea
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             placeholder="Type the message to conceal…"
             rows={3}
-            className="mono w-full rounded border border-stgBorderStrong bg-white px-3 py-2.5 text-sm text-black placeholder:text-stgTextMuted focus:outline-none focus:border-stgOrange resize-none"
+            className="mono w-full rounded border border-stgBorderStrong bg-stgSurface px-3 py-2.5 text-sm text-stgTextPrimary placeholder:text-stgTextMuted focus:outline-none focus:border-stgOrange resize-none"
           />
           <p className="text-xs text-stgTextMuted mt-1">
-            PNG/BMP → LSB substitution · WAV → audio LSB · All other formats → EOF-append
+            Each file uses the best available technique for its format. Successful embeds are bundled into a single .zip download.
           </p>
         </div>
       )}
 
       <div
         onClick={() => inputRef.current?.click()}
-        className="border border-dashed rounded px-6 py-8 text-center text-sm cursor-pointer border-stgBorderStrong bg-white text-stgTextSecondary hover:border-stgOrange/60"
+        className="border border-dashed rounded px-6 py-8 text-center text-sm cursor-pointer border-stgBorderStrong text-stgTextSecondary hover:border-stgTextMuted"
       >
-        Click to add files — any format ({items.length}/{MAX_BATCH_FILES})
-        <input
-          ref={inputRef}
-          type="file"
-          multiple
-          className="hidden"
-          onChange={(e) => addFiles(e.target.files)}
-        />
+        Click to add files ({items.length}/{MAX_BATCH_FILES})
+        <input ref={inputRef} type="file" multiple className="hidden" onChange={(e) => addFiles(e.target.files)} />
       </div>
 
       {items.length > 0 && (
         <>
-          <div className="border border-stgBorder rounded bg-white max-h-80 overflow-y-auto">
+          <div className="border border-stgBorder rounded bg-stgSurface max-h-80 overflow-y-auto">
             {items.map((item) => (
               <div key={item.id} className="group relative">
                 <BatchFileRow item={item} />
@@ -189,7 +173,6 @@ export default function BatchPanel() {
               </div>
             ))}
           </div>
-
           <div className="flex gap-3">
             <Button onClick={runBatch} disabled={isRunning || (mode === 'embed' && !message)}>
               {isRunning ? 'Processing…' : `Run batch ${mode}`}

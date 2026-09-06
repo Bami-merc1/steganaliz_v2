@@ -21,16 +21,16 @@ export const DOCUMENTATION: DocChapter[] = [
         id: 'what-is',
         title: 'What is Steganaliz?',
         content: `
-Steganaliz is a **browser-based steganography and steganalysis workbench** - a unified tool for hiding secret messages inside ordinary files, and for detecting whether a file already contains hidden data.
+      Steganaliz is a **browser-based steganography and steganalysis workbench** — a unified tool for hiding secret messages inside ordinary files, and for detecting whether a file already contains hidden data.
 
-**Key facts:**
-- Works on **40+ file formats** - images, audio, video, documents, code, binaries
-- **Everything runs in your browser.** No server. No uploads. No data ever leaves your device.
-- Combines **embedding, extraction, detection, encryption,** and **forensic analysis** in one place
+      **Key facts:**
+      - Works on **40+ file formats** — images, audio, video, documents, code, binaries
+      - **Everything runs in your browser.** No server. No uploads. No data ever leaves your device.
+      - Combines **embedding, extraction, detection, encryption,** and **forensic analysis** in one place
 
-**Steganography** hides the existence of a message, not just its content - this is what separates it from encryption, which scrambles content but makes it obvious a secret exists.
+      **Steganography** hides the existence of a message, not just its content — this is what separates it from encryption, which scrambles content but makes it obvious a secret exists.
 
-**Steganalysis** is the detective work: statistically analysing files to determine whether hidden data is present.
+      **Steganalysis** is the detective work: statistically analysing files to determine whether hidden data is present.
         `,
       },
       {
@@ -361,22 +361,24 @@ If you forget the password, there is **no recovery path.** The encryption has no
         id: 'formats',
         title: 'Supported formats',
         content: `
-| Format | Embed engines available | Detection |
-|---|---|---|
-| PNG, BMP | LSB sequential, LSB randomized, metadata chunk, EOF-append | Full suite |
-| JPG, JPEG | EOF-append | Chi-square, histogram, LSB ratio, sample pair, RS, entropy |
-| GIF, SVG | EOF-append | Entropy, header check |
-| WAV | WAV audio LSB, EOF-append | Entropy |
-| MP3, MP4 | EOF-append | Entropy |
-| PDF, DOCX, PPTX, ODT, RTF | EOF-append | Header check, entropy |
-| TXT, MD, HTML, XML, CSV | EOF-append | - |
-| PY, JS, TS, CSS, JSON | EOF-append | - |
-| EXE, BIN, ISO, APK, ZIP | EOF-append | - |
+      | Format | Embed engines available | Detection |
+      |---|---|---|
+      | PNG, BMP | LSB sequential, LSB randomized, metadata chunk, EOF-append | Full suite |
+      | JPG, JPEG | COM marker injection, EOF-append | Chi-square, histogram, LSB ratio, sample pair, RS, entropy, JPEG COM inspector |
+      | GIF, SVG, WEBP | EOF-append | Entropy, header check |
+      | WAV | WAV audio LSB, EOF-append | Entropy |
+      | MP3, MP4 | EOF-append | Entropy |
+      | PDF | XMP metadata injection, EOF-append | Header check, entropy |
+      | DOCX, PPTX, ODT | Custom XML part, EOF-append | Header check, entropy |
+      | TXT, MD, HTML, XML, CSV | Zero-width characters, EOF-append | Zero-width detector |
+      | PY, JS, TS, CSS, JSON | Zero-width characters, EOF-append | Zero-width detector |
+      | EXE, BIN, ISO, APK, ZIP | EOF-append | Entropy, header check |
 
-**Format limits:**
-- WAV: 16-bit PCM only (8-bit, 24-bit, float WAV not supported)
-- Maximum file size: **100 MB**
-- JPEG cannot use pixel LSB - lossy compression destroys arbitrary bit-level changes
+      **Format limits:**
+      - WAV: 16-bit PCM only
+      - Maximum file size: **100 MB**
+      - JPEG uses COM marker injection — pixels are not modified, so the image quality is fully preserved
+      - DOCX/PPTX/ODT embed via a hidden XML part inside the ZIP container — the document renders and prints normally
         `,
       },
       {

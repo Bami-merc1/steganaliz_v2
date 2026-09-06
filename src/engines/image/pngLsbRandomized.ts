@@ -162,17 +162,11 @@ export const pngLsbRandomizedEmbed: EmbedEngine = {
     });
 
     const blobBytes = new Uint8Array(await blob.arrayBuffer());
-    const withSalt = appendSaltChunk(blobBytes, orderSalt);
-
-    // Copy into a fresh ArrayBuffer - the only Blob-accepted buffer type
-    // that TS 6 won't complain about, since new ArrayBuffer() never
-    // produces a SharedArrayBuffer (unlike .buffer.slice() whose return
-    // type is ArrayBuffer | SharedArrayBuffer in TS 6's DOM lib).
-    const saltCopyBuffer = new ArrayBuffer(withSalt.length);
-    new Uint8Array(saltCopyBuffer).set(withSalt);
-
+    const withSalt  = appendSaltChunk(blobBytes, orderSalt);
+    const safe      = new Uint8Array(withSalt.length);
+    safe.set(withSalt);
     return {
-      blob: new Blob([saltCopyBuffer], { type: 'image/png' }),
+      blob: new Blob([safe], { type: 'image/png' }),
       technique: 'lsb',
       capacityUsedBytes: payloadBytes.length,
       capacityMaxBytes: capacityBytes,
