@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Environment — NEVER commit
+.env
+.env.local
+.env.*.local
+
+# Trained model weights — large binary files, excluded from git
+# The model is rebuilt/fine-tuned at runtime on the server
+ml_models/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# TypeScript build info
+*.tsbuildinfo
+
+DEPLOYMENT.md

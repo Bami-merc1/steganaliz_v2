@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Dropzone from '../shared/Dropzone';
 import Button from '../shared/Button';
 import { getEnginesSupportingExtension, autoSelectEngine, type EngineEntry } from '../../engines/registry';
-import { useHistoryStore } from '../../store/useHistoryStore';
+import { useWorkspaceSync } from '../../hooks/useWorkspaceSync';
 
 export default function ExtractPanel() {
   const [file, setFile] = useState<File | null>(null);
@@ -13,7 +13,7 @@ export default function ExtractPanel() {
   const [extractedMessage, setExtractedMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [needsPassword, setNeedsPassword] = useState(false);
-  const addHistoryEntry = useHistoryStore((s) => s.addEntry);
+  const { addEntry: addHistoryEntry } = useWorkspaceSync();
 
   const showPasswordField = needsPassword || selectedEngine?.requiresPassword;
 

@@ -21,16 +21,18 @@ export const DOCUMENTATION: DocChapter[] = [
         id: 'what-is',
         title: 'What is Steganaliz?',
         content: `
-      Steganaliz is a **browser-based steganography and steganalysis workbench** — a unified tool for hiding secret messages inside ordinary files, and for detecting whether a file already contains hidden data.
+      Steganaliz is a **browser-based steganography and steganalysis workbench** with an optional cloud Workspace Mode for persistent history, collaborative CTF rooms, and AI-powered detection.
+
+      **Two modes:**
+      - **Private Mode** — no account, no storage, everything in this browser tab only
+      - **Workspace Mode** — encrypted cloud history, real-time CTF rooms, CNN steganalysis
 
       **Key facts:**
+      - **9 embedding engines** across images, audio, documents, and text
+      - **12 steganalysis detectors** combined into a weighted verdict engine
       - Works on **40+ file formats** — images, audio, video, documents, code, binaries
-      - **Everything runs in your browser.** No server. No uploads. No data ever leaves your device.
-      - Combines **embedding, extraction, detection, encryption,** and **forensic analysis** in one place
-
-      **Steganography** hides the existence of a message, not just its content — this is what separates it from encryption, which scrambles content but makes it obvious a secret exists.
-
-      **Steganalysis** is the detective work: statistically analysing files to determine whether hidden data is present.
+      - All cryptography via the browser's native **Web Crypto API** — no third-party crypto library
+      - In Private Mode, **nothing ever leaves your device**. In Workspace Mode, all stored content is **encrypted in your browser before transmission** — the server holds only unreadable ciphertext.
         `,
       },
       {
@@ -137,34 +139,36 @@ The recovered message appears as plain text - never rendered as HTML, so malicio
         id: 'detect',
         title: 'Detect',
         content: `
-<p>Purpose: Statistically analyse a file for signs of hidden data.</p> 
+      **Purpose:** Statistically analyse a file for signs of hidden data.
 
-<div>How to use: Drop a file → click **Run detection** → read the verdict.</div>
+      How to use: Drop a file → click **Run detection** → read the verdict.
 
-<h5>Verdict levels:</h5>
+      **Verdict levels:**
 
-| Label | Score | Meaning |
-|---|---|---|
-| **CLEAN** | 0–39% | No significant anomalies |
-| **SUSPICIOUS** | 40–69% | Statistical deviations detected |
-| **STEGO** | 70–100% | Strong evidence of embedded payload |
+      | Label | Score | Meaning |
+      |---|---|---|
+      | **CLEAN** | 0–39% | No significant anomalies |
+      | **SUSPICIOUS** | 40–69% | Statistical deviations detected |
+      | **STEGO** | 70–100% | Strong evidence of embedded payload |
 
-**The 10 detectors:**
+      **The 12 detectors:**
 
-| Detector | What it measures |
-|---|---|
-| Entropy analyzer | Overall byte randomness - high entropy suggests hidden/encrypted data |
-| Chi-square attack | Pixel value pair balance - LSB embedding flattens this artificially |
-| RS analysis | Local pixel smoothness disruption caused by embedding |
-| LSB ratio test | Whether 0s and 1s in the LSB layer are suspiciously balanced |
-| Histogram analysis | Smoothness of the colour value histogram |
-| Sample pair analysis | Adjacent-sample LSB correlation disruption |
-| EOF append detector | Scans for Steganaliz's own EOF-append marker |
-| Header consistency | Checks that file magic bytes match the claimed extension |
-| Metadata inspector | Flags non-standard or oversized PNG chunks |
-| Signature fingerprinter | Scans for known Steganaliz embedding signatures |
+      | Detector | What it measures |
+      |---|---|
+      | Entropy analyzer | Overall byte randomness |
+      | Chi-square attack | Pixel value pair balance — LSB embedding flattens this |
+      | RS analysis (dual-mask) | Local pixel smoothness disruption + payload size estimate |
+      | LSB ratio test | Whether LSBs are suspiciously balanced |
+      | Histogram analysis | Smoothness of the colour value histogram |
+      | Sample pair analysis | Adjacent-sample LSB correlation disruption |
+      | EOF append detector | Scans for Steganaliz EOF-append marker |
+      | Header consistency | Checks magic bytes match declared extension |
+      | Metadata inspector | Flags non-standard PNG chunks |
+      | Signature fingerprinter | Scans for known Steganaliz embedding signatures |
+      | Zero-width detector | Detects invisible Unicode characters in text files |
+      | JPEG COM inspector | Detects COM marker payloads in JPEG files |
 
-Detection is **probabilistic** - results indicate likelihood, not certainty.
+      In **Workspace Mode**, an additional **AI Steganalysis** option is available in the Workspace tab, running a server-side SRM + CNN model specifically trained on steganographic residuals.
         `,
       },
       {
@@ -361,24 +365,26 @@ If you forget the password, there is **no recovery path.** The encryption has no
         id: 'formats',
         title: 'Supported formats',
         content: `
-      | Format | Embed engines available | Detection |
+      | Format | Embed engines | Detection |
       |---|---|---|
-      | PNG, BMP | LSB sequential, LSB randomized, metadata chunk, EOF-append | Full suite |
+      | PNG, BMP | LSB sequential, LSB randomized, metadata chunk, EOF-append | Full 12-detector suite |
       | JPG, JPEG | COM marker injection, EOF-append | Chi-square, histogram, LSB ratio, sample pair, RS, entropy, JPEG COM inspector |
       | GIF, SVG, WEBP | EOF-append | Entropy, header check |
       | WAV | WAV audio LSB, EOF-append | Entropy |
-      | MP3, MP4 | EOF-append | Entropy |
+      | MP3 | EOF-append | Entropy (ID3 tags stripped by metadata engine) |
+      | MP4, MKV | EOF-append | Entropy, header check |
       | PDF | XMP metadata injection, EOF-append | Header check, entropy |
       | DOCX, PPTX, ODT | Custom XML part, EOF-append | Header check, entropy |
       | TXT, MD, HTML, XML, CSV | Zero-width characters, EOF-append | Zero-width detector |
       | PY, JS, TS, CSS, JSON | Zero-width characters, EOF-append | Zero-width detector |
       | EXE, BIN, ISO, APK, ZIP | EOF-append | Entropy, header check |
 
-      **Format limits:**
+      **Format notes:**
       - WAV: 16-bit PCM only
+      - JPEG: COM marker injection preserves image quality — pixels are not modified
+      - DOCX/PPTX/ODT: payload stored in a hidden custom XML part inside the ZIP container
+      - PDF: payload stored in the Keywords metadata field via pdf-lib
       - Maximum file size: **100 MB**
-      - JPEG uses COM marker injection — pixels are not modified, so the image quality is fully preserved
-      - DOCX/PPTX/ODT embed via a hidden XML part inside the ZIP container — the document renders and prints normally
         `,
       },
       {

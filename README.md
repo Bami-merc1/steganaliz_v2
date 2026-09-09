@@ -104,3 +104,65 @@ npm run build
 ```
 
 and tell me what the output looks like — specifically any TS errors in the build output, and the chunk sizes Rollup reports. That'll tell us whether the manual chunk split is working (curriculum chunk should be noticeably bigger than the others, since 34 lessons is a lot of text) and whether there are any remaining type errors that only surface at build time rather than in the editor. Then we'll sort whatever comes out of that before moving to deployment.
+
+
+
+
+
+
+
+# Steganaliz v2.0
+
+A browser-based steganography and steganalysis workbench with optional cloud Workspace Mode.
+All processing runs client-side in Private Mode — no data ever leaves your device.
+Workspace Mode adds encrypted persistent history, real-time collaborative CTF rooms,
+and server-side CNN steganalysis.
+
+---
+
+## Modes
+
+| | Private Mode | Workspace Mode |
+|---|---|---|
+| Account required | No | Yes |
+| File storage | None — tab-only | Zero-knowledge encrypted cloud |
+| History | Session only | Persistent, encrypted |
+| CTF rooms | Local solver only | Live multiplayer rooms |
+| AI steganalysis | No | SRM + CNN (server-side) |
+| Batch REST API | No | Yes |
+| Cross-session comparison | No | Yes |
+
+---
+
+## Features
+
+**9 Embedding engines:**
+- PNG/BMP LSB sequential
+- PNG/BMP LSB randomized (password-seeded pixel order)
+- PNG metadata chunk injection
+- JPEG COM marker injection
+- WAV audio LSB (16-bit PCM)
+- DOCX/PPTX/ODT custom XML part
+- PDF XMP metadata injection
+- Zero-width Unicode characters (TXT/MD/HTML)
+- EOF append (any file type)
+
+**12 Steganalysis detectors** combined via weighted verdict engine:
+entropy, chi-square, RS analysis (dual-mask + payload estimation),
+LSB ratio, histogram smoothness, sample pair, EOF-append marker,
+header consistency, metadata inspector, signature fingerprinter,
+zero-width character detector, JPEG COM inspector
+
+**Forensics tools:**
+entropy heatmap, bitplane inspector, audio waveform viewer,
+binary file diff viewer, capacity calculator, algorithm comparison,
+forensic report (PDF / TXT / JSON export)
+
+**Security:**
+AES-256-GCM · PBKDF2-SHA256 (310,000 iterations) · Web Crypto API only ·
+zero-knowledge workspace storage · bcrypt auth · JWT · rate limiting ·
+Content Security Policy · HSTS
+
+---
+
+## Architecture

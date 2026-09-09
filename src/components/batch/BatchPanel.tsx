@@ -5,7 +5,7 @@ import BatchFileRow, { type BatchItem } from './BatchFileRow';
 import { computeVerdict } from '../../detectors/verdictEngine';
 import { MOCK_DETECTORS } from '../../detectors/mockDetectors';
 import { autoSelectEngine } from '../../engines/registry';
-import { useHistoryStore } from '../../store/useHistoryStore';
+import { useWorkspaceSync } from '../../hooks/useWorkspaceSync';
 import { MAX_BATCH_FILES } from '../../utils/constants';
 
 type BatchMode = 'embed' | 'detect';
@@ -16,7 +16,7 @@ export default function BatchPanel() {
   const [message, setMessage] = useState('');
   const [isRunning, setIsRunning] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
-  const addHistoryEntry = useHistoryStore((s) => s.addEntry);
+  const { addEntry: addHistoryEntry } = useWorkspaceSync();
 
   const addFiles = (fileList: FileList | null) => {
     if (!fileList) return;

@@ -1,10 +1,12 @@
 import { useState } from 'react';
+import { useAuthStore } from '../../store/useAuthStore';
 
-export type TopLevelView = 'workbench' | 'forensics' | 'training' | 'docs';
+export type TopLevelView = 'workbench' | 'forensics' | 'training' | 'docs' | 'workspace';
 
 interface Props {
   active: TopLevelView;
   onSelect: (view: TopLevelView) => void;
+  onLogout?: () => void;
 }
 
 const TABS: { id: TopLevelView; label: string }[] = [
@@ -12,10 +14,12 @@ const TABS: { id: TopLevelView; label: string }[] = [
   { id: 'forensics', label: 'FORENSICS' },
   { id: 'training',  label: 'TRAINING'  },
   { id: 'docs',      label: 'DOCS'      },
+  { id: 'workspace', label: 'WORKSPACE' },
 ];
 
-export default function Navbar({ active, onSelect }: Props) {
+export default function Navbar({ active, onSelect, onLogout }: Props) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { email, isWorkspaceMode } = useAuthStore();
 
   const handleSelect = (view: TopLevelView) => {
     onSelect(view);
@@ -37,16 +41,36 @@ export default function Navbar({ active, onSelect }: Props) {
             <button
               key={tab.id}
               onClick={() => handleSelect(tab.id)}
-              className={`h-14 px-6 text-xs font-semibold tracking-widest border-b-2 transition-colors ${
+              className={`h-14 px-5 text-xs font-semibold tracking-widest border-b-2 transition-colors ${
                 active === tab.id
                   ? 'text-white border-stgOrange'
                   : 'text-white/50 border-transparent hover:text-white'
               }`}
             >
-              {tab.label}
+              {tab.id === 'workspace' && isWorkspaceMode
+                ? <span className="flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-stgSuccess inline-block" />
+                    WORKSPACE
+                  </span>
+                : tab.label}
             </button>
           ))}
         </nav>
+
+        {/* Right side — user info + logout */}
+        <div className="hidden md:flex items-center gap-3">
+          {isWorkspaceMode && email && (
+            <span className="text-xs text-white/50 truncate max-w-[160px]">{email}</span>
+          )}
+          {isWorkspaceMode && onLogout && (
+            <button
+              onClick={onLogout}
+              className="text-xs text-white/40 hover:text-white transition-colors px-2 py-1 rounded border border-white/10 hover:border-white/30"
+            >
+              Sign out
+            </button>
+          )}
+        </div>
 
         {/* Mobile burger */}
         <button
@@ -60,7 +84,7 @@ export default function Navbar({ active, onSelect }: Props) {
         </button>
       </div>
 
-      {/* Mobile dropdown menu */}
+      {/* Mobile dropdown */}
       {mobileMenuOpen && (
         <div className="md:hidden absolute top-14 left-0 right-0 bg-stgBlack border-t border-white/10 z-50">
           {TABS.map((tab) => (
@@ -73,9 +97,24 @@ export default function Navbar({ active, onSelect }: Props) {
                   : 'text-white/60 border-transparent hover:text-white hover:bg-white/5'
               }`}
             >
-              {tab.label}
+              {tab.id === 'workspace' && isWorkspaceMode
+                ? <span className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-stgSuccess" />
+                    WORKSPACE
+                  </span>
+                : tab.label}
             </button>
           ))}
+          {isWorkspaceMode && (
+            <div className="px-6 py-3 border-t border-white/10 flex items-center justify-between">
+              <span className="text-xs text-white/40 truncate">{email}</span>
+              {onLogout && (
+                <button onClick={onLogout} className="text-xs text-white/40 hover:text-white">
+                  Sign out
+                </button>
+              )}
+            </div>
+          )}
         </div>
       )}
     </header>

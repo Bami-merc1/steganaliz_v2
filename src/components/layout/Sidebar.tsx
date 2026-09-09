@@ -7,7 +7,7 @@ const MODULES: { id: ModuleId; label: string }[] = [
   { id: 'batch',    label: 'Batch'    },
   { id: 'metadata', label: 'Metadata' },
   { id: 'history',  label: 'History'  },
-  { id: 'ctf',      label: 'CTF'      },
+  { id: 'ctf',      label: 'CTF Solver'      },
 ];
 
 interface Props {

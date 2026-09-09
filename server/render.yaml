@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: steganaliz-api
+    runtime: node
+    rootDir: server
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGO_URI
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: FRONTEND_ORIGIN
+        value: https://steganaliz.emerc.site
+    # Persistent disk for the trained model weights
+    disk:
+      name: ml-models
+      mountPath: /opt/render/project/src/server/ml_models
+      sizeGB: 1

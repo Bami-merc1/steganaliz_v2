@@ -8,7 +8,7 @@ import {
   getEnginesSupportingExtension,
   type EngineEntry,
 } from '../../engines/registry';
-import { useHistoryStore } from '../../store/useHistoryStore';
+import { useWorkspaceSync } from '../../hooks/useWorkspaceSync';
 import { formatBytes } from '../../utils/formatBytes';
 import { validateCarrierFile } from '../../utils/fileValidation';
 import { sanitizeSvgFile } from '../../utils/svgSanitizer';
@@ -24,7 +24,7 @@ export default function EmbedPanel() {
   const [password, setPassword] = useState('');
   const [isEmbedding, setIsEmbedding] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const addHistoryEntry = useHistoryStore((s) => s.addEntry);
+  const { addEntry: addHistoryEntry } = useWorkspaceSync();
 
   const messageBytes = useMemo(
     () => new TextEncoder().encode(message).length,

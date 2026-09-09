@@ -3,15 +3,15 @@ import Dropzone from '../shared/Dropzone';
 import Button from '../shared/Button';
 import { stripMetadata, isMetadataStrippable } from '../../engines/metadataStrip';
 import { formatBytes } from '../../utils/formatBytes';
-import { useHistoryStore } from '../../store/useHistoryStore';
+import { useWorkspaceSync } from '../../hooks/useWorkspaceSync';
 
 export default function MetadataPanel() {
   const [file, setFile] = useState<File | null>(null);
   const [isStripping, setIsStripping] = useState(false);
   const [result, setResult] = useState<{ originalSize: number; strippedSize: number; bytesRemoved: number; method: string } | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const addHistoryEntry = useHistoryStore((s) => s.addEntry);
-
+  const { addEntry: addHistoryEntry } = useWorkspaceSync();
+  
   const ext = file?.name.split('.').pop()?.toLowerCase() ?? '';
   const strippable = file ? isMetadataStrippable(file.name) : false;
 

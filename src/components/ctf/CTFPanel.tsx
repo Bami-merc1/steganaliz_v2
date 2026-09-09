@@ -2,6 +2,8 @@ import { useState } from 'react';
 import Dropzone from '../shared/Dropzone';
 import Button from '../shared/Button';
 import { getEnginesSupportingExtension } from '../../engines/registry';
+import { useWorkspaceSync } from '../../hooks/useWorkspaceSync';
+
 
 interface TechniqueAttempt {
   technique: string;
@@ -16,6 +18,8 @@ export default function CTFPanel() {
   const [attempts, setAttempts] = useState<TechniqueAttempt[]>([]);
   const [isRunning, setIsRunning] = useState(false);
   const [hexPreview, setHexPreview] = useState<string>('');
+  const { addEntry } = useWorkspaceSync();
+
 
   const handleFile = async (f: File) => {
     setFile(f);
@@ -54,6 +58,13 @@ export default function CTFPanel() {
           status: 'success',
           result: message,
         });
+        if (message) {
+          await addEntry({
+            action: 'extract',
+            fileName: file.name,
+            detail: `CTF Solver · ${engine.label} · recovered ${new TextEncoder().encode(message).length} bytes`,
+          });
+        }
         setAttempts([...results]);
         setIsRunning(false);
         return;
@@ -66,6 +77,7 @@ export default function CTFPanel() {
           errorMessage: requiresPassword ? 'Payload requires a password.' : msg,
         });
         setAttempts([...results]);
+
 
         
         if (!requiresPassword || passwords.length === 0) continue;
