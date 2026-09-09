@@ -53,7 +53,7 @@ export const eofAppendEmbed: EmbedEngine = {
     output.set(payloadBytes, offset);
 
     return {
-      blob: new Blob([output], { type: file.type || 'application/octet-stream' }),
+      blob: new Blob([new Uint8Array(output)], { type: file.type || 'application/octet-stream' }),      
       technique: 'eof-append',
       capacityUsedBytes: payloadBytes.length,
       capacityMaxBytes: Number.MAX_SAFE_INTEGER,

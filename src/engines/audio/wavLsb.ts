@@ -120,7 +120,7 @@ export const wavLsbEmbed: EmbedEngine = {
     }
 
     return {
-      blob: new Blob([output], { type: 'audio/wav' }),
+      blob: new Blob([new Uint8Array(output)], { type: 'audio/wav' }),
       technique: 'lsb',
       capacityUsedBytes: payloadBytes.length,
       capacityMaxBytes: capacityBytes,

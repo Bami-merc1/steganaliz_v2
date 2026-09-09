@@ -136,7 +136,9 @@ export default function ForensicReport() {
     try {
       const pdfBytes = await generateForensicPdf(report);
       // const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-      const blob = new Blob([pdfBytes as BlobPart], { type: 'application/pdf' });
+      const safe = new Uint8Array(pdfBytes.length);
+      safe.set(pdfBytes);
+      const blob = new Blob([safe], { type: 'application/pdf' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       const safeName = report.fileName.replace(/[^a-z0-9_-]/gi, '_');

@@ -29,12 +29,11 @@ function buildComChunk(data: Uint8Array): Uint8Array {
 }
 
 function injectAfterSOI(jpegBytes: Uint8Array, chunk: Uint8Array): Uint8Array {
-  // Insert immediately after the SOI marker (first 2 bytes)
   const out = new Uint8Array(jpegBytes.length + chunk.length);
   out.set(jpegBytes.slice(0, 2), 0);
   out.set(chunk, 2);
   out.set(jpegBytes.slice(2), 2 + chunk.length);
-  return out;
+  return out; // already fresh Uint8Array<ArrayBuffer> — but the blob line needs fixing
 }
 
 function extractComPayload(jpegBytes: Uint8Array): Uint8Array | null {
@@ -101,7 +100,7 @@ export const jpegComEmbed: EmbedEngine = {
     const output = injectAfterSOI(bytes, comChunk);
 
     return {
-      blob: new Blob([output], { type: 'image/jpeg' }),
+      blob: new Blob([new Uint8Array(output)], { type: 'image/jpeg' }),      
       technique: 'metadata-injection',
       capacityUsedBytes: payloadBytes.length,
       capacityMaxBytes: 65535 - 2 - MAGIC.length - 5,

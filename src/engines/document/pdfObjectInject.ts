@@ -38,7 +38,7 @@ export const pdfObjectInjectEmbed: EmbedEngine = {
     const outBytes = await pdfDoc.save({ useObjectStreams: false });
 
     return {
-      blob: new Blob([outBytes as BlobPart], { type: 'application/pdf' }),
+      blob: new Blob([new Uint8Array(outBytes)], { type: 'application/pdf' }),
       technique: 'metadata-injection',
       capacityUsedBytes: payloadBytes.length,
       capacityMaxBytes: Number.MAX_SAFE_INTEGER,
