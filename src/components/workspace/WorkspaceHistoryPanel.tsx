@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useAuthStore } from '../../store/useAuthStore';
 import { workspaceApi, type WorkspaceEntryResponse } from '../../utils/workspaceApi';
-import { decryptWorkspaceEntry, encryptWorkspaceEntry } from '../../utils/workspaceCrypto';
+import { decryptWorkspaceEntry, } from '../../utils/workspaceCrypto';
 import Button from '../shared/Button';
 
 interface DecryptedEntry {

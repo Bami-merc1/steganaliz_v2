@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import Button from '../shared/Button';
 import { useAuthStore } from '../../store/useAuthStore';
-import { encryptWorkspaceEntry, decryptWorkspaceEntry } from '../../utils/workspaceCrypto';
+import { decryptWorkspaceEntry } from '../../utils/workspaceCrypto';
 
 const API_BASE = import.meta.env.VITE_API_URL ?? 'https://steganaliz-api.onrender.com';
 
@@ -45,7 +45,7 @@ interface VerdictData {
 type DecryptedEntry = VerdictData & { id: string; label: string };
 
 export default function ComparisonPanel() {
-  const { token, sessionPassword, workspaceSalt, isWorkspaceMode } = useAuthStore();
+  const { token, sessionPassword, isWorkspaceMode } = useAuthStore();
   const [decrypted, setDecrypted] = useState<DecryptedEntry[]>([]);
   const [selected,  setSelected]  = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);

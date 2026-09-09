@@ -3,7 +3,6 @@ import { encryptPayload, decryptPayload } from '../../utils/crypto';
 import { PDFDocument } from 'pdf-lib';
 
 const MAGIC_KEY    = 'stgzPayload';
-const ENCRYPTED_KEY = 'stgzEncrypted';
 
 function uint8ToBase64(bytes: Uint8Array): string {
   let bin = '';
@@ -20,8 +19,8 @@ function base64ToUint8(b64: string): Uint8Array {
 
 // Copies a Uint8Array<ArrayBufferLike> into a fresh Uint8Array<ArrayBuffer>
 // so it is accepted by new Blob() under TypeScript 6's strict buffer typing.
-function toSafeBuffer(src: Uint8Array): Uint8Array {
-  const safe = new Uint8Array(src.length);
+function toSafeBuffer(src: Uint8Array): Uint8Array<ArrayBuffer> {
+  const safe = new Uint8Array(src.length) as Uint8Array<ArrayBuffer>;
   safe.set(src);
   return safe;
 }

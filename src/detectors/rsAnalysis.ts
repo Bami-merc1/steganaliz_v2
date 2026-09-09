@@ -90,7 +90,7 @@ export const rsAnalysisDetector: Detector = {
     }
 
     const { regular: rm,  singular: sm,  unusable: um  } = classifyGroups(values, MASK_M);
-    const { regular: rnm, singular: snm, unusable: unm } = classifyGroups(values, MASK_NM);
+    const { regular: rnm, singular: snm } = classifyGroups(values, MASK_NM);
     const total = rm + sm + um;
 
     const score = estimateEmbeddingRate(rm, sm, rnm, snm, total);
