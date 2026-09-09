@@ -26,27 +26,56 @@ export default function LandingPage({ onPrivateMode, onWorkspaceReady }: Props) 
   // Check API health on mount — handles Render cold start gracefully
   useEffect(() => {
     let cancelled = false;
-    const check = async () => {
+    let intervalId: ReturnType<typeof setInterval> | null = null;
+
+    const ping = async (): Promise<boolean> => {
       try {
-        const res = await fetch(`${API_BASE}/health`, { signal: AbortSignal.timeout(5000) });
-        if (!cancelled) setApiStatus(res.ok ? 'online' : 'offline');
+        const res = await fetch(`${API_BASE}/health`, {
+          signal: AbortSignal.timeout(8000),
+        });
+        return res.ok;
       } catch {
-        if (!cancelled) {
-          // Likely cold start — retry after delay
-          setApiStatus('cold-starting');
-          setTimeout(async () => {
-            try {
-              const res2 = await fetch(`${API_BASE}/health`, { signal: AbortSignal.timeout(25000) });
-              if (!cancelled) setApiStatus(res2.ok ? 'online' : 'offline');
-            } catch {
-              if (!cancelled) setApiStatus('offline');
-            }
-          }, 2000);
-        }
+        return false;
       }
     };
-    check();
-    return () => { cancelled = true; };
+
+    const startPolling = async () => {
+      // First check
+      const alive = await ping();
+      if (cancelled) return;
+
+      if (alive) {
+        setApiStatus('online');
+      } else {
+        setApiStatus('cold-starting');
+        // Poll every 10 seconds until it wakes up
+        intervalId = setInterval(async () => {
+          if (cancelled) return;
+          const awake = await ping();
+          if (awake && !cancelled) {
+            setApiStatus('online');
+            if (intervalId) clearInterval(intervalId);
+          }
+        }, 10_000);
+      }
+
+      // Keep-alive ping every 60 seconds while user is on this page
+      // (supplements the GitHub Actions cron)
+      const keepAliveId = setInterval(async () => {
+        if (!cancelled) await ping();
+      }, 60_000);
+
+      return () => {
+        clearInterval(keepAliveId);
+      };
+    };
+
+    startPolling();
+
+    return () => {
+      cancelled = true;
+      if (intervalId) clearInterval(intervalId);
+    };
   }, []);
 
   const submit = async () => {
@@ -66,15 +95,29 @@ export default function LandingPage({ onPrivateMode, onWorkspaceReady }: Props) 
     }
   };
 
+  // Replace the ApiStatusBadge component with this version:
   const ApiStatusBadge = () => {
+    const [dots, setDots] = useState('');
+
+    useEffect(() => {
+      if (apiStatus !== 'cold-starting') return;
+      const id = setInterval(() => setDots((d) => (d.length >= 3 ? '' : d + '.')), 500);
+      return () => clearInterval(id);
+    }, [apiStatus]);
+
     const map: Record<ApiStatus, { color: string; text: string }> = {
-      checking:     { color: 'text-stgTextMuted',  text: 'Checking server…' },
-      online:       { color: 'text-stgSuccess',    text: 'Server online' },
-      'cold-starting': { color: 'text-stgWarning', text: 'Server waking up (~30s)…' },
-      offline:      { color: 'text-stgDanger',     text: 'Server offline — Workspace Mode unavailable' },
+      checking:        { color: 'text-stgTextMuted',  text: 'Checking server…' },
+      online:          { color: 'text-stgSuccess',    text: 'Server online' },
+      'cold-starting': { color: 'text-stgWarning',    text: `Waking server up${dots} (~30s)` },
+      offline:         { color: 'text-stgDanger',     text: 'Server offline — Workspace Mode unavailable' },
     };
     const { color, text } = map[apiStatus];
-    return <span className={`text-xs ${color} flex items-center gap-1`}><span className="w-1.5 h-1.5 rounded-full bg-current" />{text}</span>;
+    return (
+      <span className={`text-xs ${color} flex items-center gap-1.5`}>
+        <span className={`w-1.5 h-1.5 rounded-full bg-current ${apiStatus === 'cold-starting' ? 'animate-pulse' : ''}`} />
+        {text}
+      </span>
+    );
   };
 
   return (
