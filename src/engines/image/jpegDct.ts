@@ -8,9 +8,9 @@ import { encryptPayload, decryptPayload } from '../../utils/crypto';
 // This is the correct, lossless JPEG steganography approach for a
 // browser-only tool without a full DCT coefficient parser.
 
-const COM_MARKER   = new Uint8Array([0xff, 0xfe]);
-const SOI_MARKER   = new Uint8Array([0xff, 0xd8]);
-const FLAG_BYTE    = 1; // byte: 0 = plaintext, 1 = encrypted
+// const COM_MARKER   = new Uint8Array([0xff, 0xfe]);
+// const SOI_MARKER   = new Uint8Array([0xff, 0xd8]);
+// const FLAG_BYTE    = 1; // byte: 0 = plaintext, 1 = encrypted
 const MAGIC        = new TextEncoder().encode('STGJPG');
 
 function readUint16BE(bytes: Uint8Array, offset: number): number {

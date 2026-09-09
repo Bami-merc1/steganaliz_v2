@@ -1,5 +1,5 @@
 // src/engines/document/pdfObjectInject.ts
-import { PDFDocument, PDFDict, PDFName, PDFHexString, PDFRef } from 'pdf-lib';
+import { PDFDocument, PDFDict, PDFName, PDFHexString } from 'pdf-lib';
 import type { EmbedEngine, ExtractEngine, EmbedResult } from '../types';
 import { encryptPayload, decryptPayload } from '../../utils/crypto';
 

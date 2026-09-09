@@ -18,8 +18,8 @@ export const METADATA_STRIPPABLE_EXTENSIONS = [
 ];
 
 // ── Shared safe-copy helper (fixes Uint8Array<ArrayBufferLike> → Blob TS6 error) ──
-function safeUint8(src: Uint8Array): Uint8Array {
-  const out = new Uint8Array(src.length);
+function safeUint8(src: Uint8Array): Uint8Array<ArrayBuffer> {
+  const out = new Uint8Array(src.length) as Uint8Array<ArrayBuffer>;
   out.set(src);
   return out;
 }
