@@ -8,7 +8,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:4000',
+        target: 'http://steganaliz-v2.onrender.com:4000',
         changeOrigin: true,
       },
     },
