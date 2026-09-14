@@ -3,13 +3,13 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "tsx watch src/index.ts",
+    "dev": "node --import ./patch.mjs --loader tsx/esm src/index.ts",
     "build": "tsc",
-    "start": "node dist/index.js",
+    "start": "node --import ./patch.mjs dist/index.js",
     "train:generate": "tsx src/ml/generateTrainingData.ts"
   },
   "dependencies": {
-    "@tensorflow/tfjs-node": "^4.22.0",
+    "@tensorflow/tfjs-node": "^4.20.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^17.4.2",

@@ -5,6 +5,7 @@ services:
     rootDir: server
     buildCommand: npm install && npm run build
     startCommand: npm start
+    nodeVersion: 18.20.4
     envVars:
       - key: NODE_ENV
         value: production
@@ -14,7 +15,6 @@ services:
         generateValue: true
       - key: FRONTEND_ORIGIN
         value: https://steganaliz.emerc.site
-    # Persistent disk for the trained model weights
     disk:
       name: ml-models
       mountPath: /opt/render/project/src/server/ml_models
