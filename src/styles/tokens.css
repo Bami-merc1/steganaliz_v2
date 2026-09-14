@@ -1,29 +1,62 @@
 :root {
-  --stg-black:          #1a1a1a;
-  --stg-black-soft:     #222222;
-  --stg-orange:         #e8542a;
-  --stg-orange-soft:    #fdf0eb;
+  /* ── Palette ──────────────────────────────────────────── */
+  --clr-black:        #0d1117;
+  --clr-surface:      #ffffff;
+  --clr-bg:           #f6f7f9;
+  --clr-orange:       #e8542a;
+  --clr-orange-dim:   #f0683d;
+  --clr-orange-soft:  #fdf1ee;
+  --clr-success:      #2d7a4f;
+  --clr-warning:      #92600a;
+  --clr-danger:       #c4322a;
 
-  --stg-sidebar:        #5f778f;
-  --stg-sidebar-hover:  #243444;
-  --stg-sidebar-active: #29404f;
-  --stg-sidebar-border: #2a3a4a;
-  --stg-sidebar-text:   #9bb0c4;
+  /* ── Text ─────────────────────────────────────────────── */
+  --clr-text-primary:   #0d1117;
+  --clr-text-secondary: #3d4450;
+  --clr-text-muted:     #6b7280;
 
-  --stg-bg:             #f4f5f7;
-  --stg-surface:        #ffffff;
-  --stg-border:         #dde1e7;
-  --stg-border-strong:  #c4c9d4;
+  /* ── Borders ──────────────────────────────────────────── */
+  --clr-border:        #e4e7ec;
+  --clr-border-strong: #c9cdd6;
 
-  --stg-text-primary:   #57689b;
-  --stg-text-secondary: #546e7a;
-  --stg-text-muted:     #8a9bb0;
-  --stg-text-on-dark:   #e8edf2;
+  /* ── Type ─────────────────────────────────────────────── */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
 
-  --stg-danger:         #c4544a;
-  --stg-success:        #2e7d52;
-  --stg-warning:        #b07a2a;
+  /* ── Scale ────────────────────────────────────────────── */
+  --text-xs:   11px;
+  --text-sm:   13px;
+  --text-base: 14.5px;
+  --text-lg:   17px;
+  --text-xl:   21px;
+  --text-2xl:  26px;
+  --text-3xl:  34px;
 
-  --stg-font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  --stg-font-mono: 'JetBrains Mono', 'IBM Plex Mono', monospace;
+  /* ── Spacing ──────────────────────────────────────────── */
+  --sp-1:  4px;
+  --sp-2:  8px;
+  --sp-3:  12px;
+  --sp-4:  16px;
+  --sp-5:  20px;
+  --sp-6:  24px;
+  --sp-8:  32px;
+  --sp-10: 40px;
+  --sp-12: 48px;
+  --sp-16: 64px;
+
+  /* ── Radius ───────────────────────────────────────────── */
+  --radius-sm:  4px;
+  --radius-md:  8px;
+  --radius-lg: 12px;
+
+  /* ── Shadows ──────────────────────────────────────────── */
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.06);
+  --shadow-md: 0 4px 12px rgba(0,0,0,.08);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,.10);
+
+  /* ── Layout ───────────────────────────────────────────── */
+  --sidebar-w:  200px;
+  --navbar-h:    52px;
+  --footer-h:    44px;
+  --panel-max:  720px;
 }

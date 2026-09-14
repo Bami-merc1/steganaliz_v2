@@ -95,7 +95,7 @@ export default function LandingPage({ onPrivateMode, onWorkspaceReady }: Props) 
     }
   };
 
-  // Replace the ApiStatusBadge component with this version:
+
   const ApiStatusBadge = () => {
     const [dots, setDots] = useState('');
 
@@ -120,114 +120,241 @@ export default function LandingPage({ onPrivateMode, onWorkspaceReady }: Props) 
     );
   };
 
+  // Replace the return statement with:
   return (
-    <div className="flex-1 flex items-center justify-center bg-stgBg px-4 py-12">
-      <div className="w-full max-w-lg">
+    <div style={{
+      minHeight: '100vh',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: 'var(--sp-6) var(--sp-4)',
+      background: 'var(--clr-bg)',
+    }}>
+      <div style={{ width: '100%', maxWidth: 480 }}>
 
-        {/* Logo */}
-        <div className="text-center mb-10">
-          <div className="flex items-baseline justify-center gap-1 mb-2">
-            <span className="text-4xl font-bold tracking-tight text-black">STEGAN</span>
-            <span className="text-4xl font-bold tracking-tight text-stgOrange">ALIZ</span>
+        {/* Logo block */}
+        <div style={{ textAlign: 'center', marginBottom: 'var(--sp-8)' }}>
+          <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'center', marginBottom: 8 }}>
+            <span style={{ fontSize: 'clamp(28px, 6vw, 42px)', fontWeight: 800, letterSpacing: -1, color: 'var(--clr-text-primary)' }}>
+              STEGAN
+            </span>
+            <span style={{ fontSize: 'clamp(28px, 6vw, 42px)', fontWeight: 800, letterSpacing: -1, color: 'var(--clr-orange)' }}>
+              ALIZ
+            </span>
           </div>
-          <p className="text-sm text-stgTextSecondary">Browser-based steganography & steganalysis workbench</p>
-          <div className="mt-3 flex justify-center"><ApiStatusBadge /></div>
+          <p style={{ fontSize: 13, color: 'var(--clr-text-muted)', marginBottom: 12 }}>
+            Browser-based steganography &amp; steganalysis workbench
+          </p>
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <ApiStatusBadge />
+          </div>
         </div>
 
         {panel === 'choose' && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--sp-3)' }}>
+            {/* Private Mode */}
             <button
               onClick={onPrivateMode}
-              className="group border-2 border-stgBorder rounded-lg px-6 py-8 text-left hover:border-stgOrange transition-colors bg-white"
+              style={{
+                background: '#fff',
+                border: '2px solid var(--clr-border)',
+                borderRadius: 'var(--radius-lg)',
+                padding: 'var(--sp-5)',
+                textAlign: 'left',
+                cursor: 'pointer',
+                transition: 'border-color .15s, box-shadow .15s',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = 'var(--clr-orange)';
+                e.currentTarget.style.boxShadow = 'var(--shadow-md)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = 'var(--clr-border)';
+                e.currentTarget.style.boxShadow = 'none';
+              }}
             >
-              <div className="text-2xl mb-3">🔒</div>
-              <h2 className="font-bold text-black text-lg mb-2">Private Mode</h2>
-              <p className="text-sm text-stgTextSecondary leading-relaxed">
-                No account. No storage. Everything stays in this tab and is gone when you close it.
+              <div style={{ fontSize: 24, marginBottom: 10 }}>🔒</div>
+              <p style={{ fontSize: 14, fontWeight: 700, color: 'var(--clr-text-primary)', marginBottom: 6 }}>
+                Private Mode
               </p>
-              <p className="text-xs text-stgTextMuted mt-4 group-hover:text-stgOrange transition-colors">
-                Start immediately →
+              <p style={{ fontSize: 12, color: 'var(--clr-text-muted)', lineHeight: 1.5 }}>
+                No account. No storage. Everything stays in this tab.
+              </p>
+              <p style={{ fontSize: 12, color: 'var(--clr-orange)', marginTop: 12, fontWeight: 500 }}>
+                Start now →
               </p>
             </button>
 
+            {/* Workspace Mode */}
             <button
               onClick={() => apiStatus !== 'offline' && setPanel('login')}
               disabled={apiStatus === 'offline'}
-              className={`group border-2 rounded-lg px-6 py-8 text-left transition-colors bg-white ${
-                apiStatus === 'offline'
-                  ? 'border-stgBorder opacity-50 cursor-not-allowed'
-                  : 'border-stgBorder hover:border-stgOrange'
-              }`}
+              style={{
+                background: '#fff',
+                border: '2px solid var(--clr-border)',
+                borderRadius: 'var(--radius-lg)',
+                padding: 'var(--sp-5)',
+                textAlign: 'left',
+                cursor: apiStatus === 'offline' ? 'not-allowed' : 'pointer',
+                opacity: apiStatus === 'offline' ? 0.5 : 1,
+                transition: 'border-color .15s, box-shadow .15s',
+              }}
+              onMouseEnter={(e) => {
+                if (apiStatus === 'offline') return;
+                e.currentTarget.style.borderColor = 'var(--clr-orange)';
+                e.currentTarget.style.boxShadow = 'var(--shadow-md)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = 'var(--clr-border)';
+                e.currentTarget.style.boxShadow = 'none';
+              }}
             >
-              <div className="text-2xl mb-3">🗂</div>
-              <h2 className="font-bold text-black text-lg mb-2">Workspace Mode</h2>
-              <p className="text-sm text-stgTextSecondary leading-relaxed">
-                Save encrypted history, collaborate on CTF challenges, and run AI-powered steganalysis.
+              <div style={{ fontSize: 24, marginBottom: 10 }}>🗂</div>
+              <p style={{ fontSize: 14, fontWeight: 700, color: 'var(--clr-text-primary)', marginBottom: 6 }}>
+                Workspace
               </p>
-              <p className={`text-xs mt-4 transition-colors ${apiStatus === 'offline' ? 'text-stgDanger' : 'text-stgTextMuted group-hover:text-stgOrange'}`}>
-                {apiStatus === 'offline' ? 'Server unavailable' :
-                 apiStatus === 'cold-starting' ? 'Waking server up…' :
-                 'Sign in or register →'}
+              <p style={{ fontSize: 12, color: 'var(--clr-text-muted)', lineHeight: 1.5 }}>
+                Encrypted history, CTF rooms, AI analysis.
+              </p>
+              <p style={{
+                fontSize: 12,
+                marginTop: 12,
+                fontWeight: 500,
+                color: apiStatus === 'offline' ? 'var(--clr-danger)' :
+                      apiStatus === 'cold-starting' ? 'var(--clr-warning)' : 'var(--clr-orange)',
+              }}>
+                {apiStatus === 'offline' ? 'Unavailable' :
+                apiStatus === 'cold-starting' ? `Waking up${dots}` : 'Sign in →'}
               </p>
             </button>
           </div>
         )}
 
         {(panel === 'login' || panel === 'register') && (
-          <div className="bg-white border border-stgBorder rounded-lg px-8 py-8 space-y-5">
-            <button onClick={() => { setPanel('choose'); setError(null); }} className="text-xs text-stgTextMuted hover:text-black">
+          <div style={{
+            background: '#fff',
+            border: '1px solid var(--clr-border)',
+            borderRadius: 'var(--radius-lg)',
+            padding: 'clamp(20px, 5vw, 36px)',
+            boxShadow: 'var(--shadow-md)',
+          }}>
+            <button
+              onClick={() => { setPanel('choose'); setError(null); }}
+              style={{
+                background: 'none',
+                border: 'none',
+                fontSize: 12,
+                color: 'var(--clr-text-muted)',
+                cursor: 'pointer',
+                marginBottom: 20,
+                padding: 0,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 4,
+              }}
+            >
               ← Back
             </button>
-            <div>
-              <h2 className="font-bold text-black text-xl">
-                {panel === 'login' ? 'Sign in to Workspace' : 'Create Workspace Account'}
-              </h2>
-              <p className="text-xs text-stgTextMuted mt-1">
-                Your files are encrypted in your browser before reaching our servers.
-              </p>
-            </div>
 
-            <div className="space-y-3">
+            <h2 style={{ fontSize: 20, fontWeight: 700, color: 'var(--clr-text-primary)', marginBottom: 4 }}>
+              {panel === 'login' ? 'Sign in' : 'Create account'}
+            </h2>
+            <p style={{ fontSize: 12, color: 'var(--clr-text-muted)', marginBottom: 24 }}>
+              Your files are encrypted in your browser before reaching our servers.
+            </p>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
               {[
-                { label: 'EMAIL', value: email, set: setEmail, type: 'email', placeholder: 'you@example.com' },
-                { label: 'PASSWORD', value: password, set: setPassword, type: 'password', placeholder: 'Min. 8 characters' },
-                ...(panel === 'register' ? [{ label: 'CONFIRM PASSWORD', value: confirm, set: setConfirm, type: 'password', placeholder: 'Repeat password' }] : []),
+                { label: 'Email',            value: email,    set: setEmail,    type: 'email',    placeholder: 'you@example.com' },
+                { label: 'Password',         value: password, set: setPassword, type: 'password', placeholder: 'Min. 8 characters' },
+                ...(panel === 'register' ? [{ label: 'Confirm password', value: confirm, set: setConfirm, type: 'password', placeholder: 'Repeat password' }] : []),
               ].map(({ label, value, set, type, placeholder }) => (
                 <div key={label}>
-                  <label className="block text-xs font-medium tracking-wide text-stgTextSecondary mb-1">{label}</label>
+                  <label style={{
+                    display: 'block',
+                    fontSize: 12,
+                    fontWeight: 600,
+                    color: 'var(--clr-text-secondary)',
+                    marginBottom: 6,
+                  }}>
+                    {label}
+                  </label>
                   <input
                     type={type}
                     value={value}
                     onChange={(e) => set(e.target.value)}
                     placeholder={placeholder}
-                    className="w-full rounded border border-stgBorderStrong bg-stgBg px-3 py-2.5 text-sm text-black focus:outline-none focus:border-stgOrange"
+                    style={{
+                      width: '100%',
+                      padding: '10px 12px',
+                      fontSize: 14,
+                      border: '1px solid var(--clr-border-strong)',
+                      borderRadius: 'var(--radius-md)',
+                      background: 'var(--clr-bg)',
+                      color: 'var(--clr-text-primary)',
+                      outline: 'none',
+                      transition: 'border-color .15s',
+                      appearance: 'none',
+                      WebkitAppearance: 'none',
+                    }}
+                    onFocus={(e) => e.target.style.borderColor = 'var(--clr-orange)'}
+                    onBlur={(e) => e.target.style.borderColor = 'var(--clr-border-strong)'}
                     onKeyDown={(e) => e.key === 'Enter' && submit()}
                   />
                 </div>
               ))}
             </div>
 
-            {error && <p className="text-xs text-stgDanger">{error}</p>}
+            {error && (
+              <p style={{ fontSize: 12, color: 'var(--clr-danger)', marginTop: 12 }}>{error}</p>
+            )}
 
             {panel === 'register' && (
-              <p className="text-xs text-stgTextMuted leading-relaxed">
-                Your password encrypts your data before it leaves your browser. If you forget it, your saved history cannot be recovered — we cannot decrypt it.
+              <p style={{ fontSize: 11, color: 'var(--clr-text-muted)', marginTop: 14, lineHeight: 1.6 }}>
+                If you forget your password, your saved history cannot be recovered — we cannot decrypt it.
               </p>
             )}
 
             <button
               onClick={submit}
               disabled={isLoading || !email || !password || apiStatus === 'offline'}
-              className="w-full py-2.5 rounded text-sm font-bold bg-stgOrange text-white hover:bg-stgOrange/90 disabled:opacity-40 disabled:cursor-not-allowed transition-opacity"
+              style={{
+                width: '100%',
+                marginTop: 20,
+                padding: '12px',
+                fontSize: 14,
+                fontWeight: 700,
+                background: 'var(--clr-orange)',
+                color: '#fff',
+                border: 'none',
+                borderRadius: 'var(--radius-md)',
+                cursor: isLoading || !email || !password ? 'not-allowed' : 'pointer',
+                opacity: isLoading || !email || !password ? 0.4 : 1,
+                transition: 'opacity .15s, background .15s',
+              }}
+              onMouseEnter={(e) => { if (!isLoading && email && password) e.currentTarget.style.background = 'var(--clr-orange-dim)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--clr-orange)'; }}
             >
               {isLoading
                 ? (panel === 'login' ? 'Signing in…' : 'Creating account…')
                 : (panel === 'login' ? 'Sign in' : 'Create account')}
             </button>
 
-            <p className="text-center text-xs text-stgTextMuted">
+            <p style={{ textAlign: 'center', fontSize: 12, color: 'var(--clr-text-muted)', marginTop: 16 }}>
               {panel === 'login' ? "Don't have an account? " : 'Already have an account? '}
-              <button onClick={() => { setPanel(panel === 'login' ? 'register' : 'login'); setError(null); }} className="text-stgOrange hover:underline">
+              <button
+                onClick={() => { setPanel(panel === 'login' ? 'register' : 'login'); setError(null); }}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: 'var(--clr-orange)',
+                  cursor: 'pointer',
+                  fontSize: 12,
+                  fontWeight: 600,
+                  padding: 0,
+                }}
+              >
                 {panel === 'login' ? 'Register' : 'Sign in'}
               </button>
             </p>
