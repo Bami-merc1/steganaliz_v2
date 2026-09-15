@@ -22,6 +22,17 @@ export default function LandingPage({ onPrivateMode, onWorkspaceReady }: Props) 
   const [error, setError]       = useState<string | null>(null);
   const [apiStatus, setApiStatus] = useState<ApiStatus>('checking');
   const login = useAuthStore((s) => s.login);
+  const [dots, setDots] = useState('');
+
+
+  useEffect(() => {
+    if (apiStatus !== 'cold-starting') { setDots(''); return; }
+    const id = setInterval(
+      () => setDots((d) => (d.length >= 3 ? '' : d + '.')),
+      500
+    );
+    return () => clearInterval(id);
+  }, [apiStatus]);
 
   // Check API health on mount — handles Render cold start gracefully
   useEffect(() => {
@@ -97,24 +108,19 @@ export default function LandingPage({ onPrivateMode, onWorkspaceReady }: Props) 
 
 
   const ApiStatusBadge = () => {
-    const [dots, setDots] = useState('');
-
-    useEffect(() => {
-      if (apiStatus !== 'cold-starting') return;
-      const id = setInterval(() => setDots((d) => (d.length >= 3 ? '' : d + '.')), 500);
-      return () => clearInterval(id);
-    }, [apiStatus]);
-
     const map: Record<ApiStatus, { color: string; text: string }> = {
-      checking:        { color: 'text-stgTextMuted',  text: 'Checking server…' },
-      online:          { color: 'text-stgSuccess',    text: 'Server online' },
-      'cold-starting': { color: 'text-stgWarning',    text: `Waking server up${dots} (~30s)` },
-      offline:         { color: 'text-stgDanger',     text: 'Server offline — Workspace Mode unavailable' },
+      checking:        { color: 'var(--clr-text-muted)',  text: 'Checking server…' },
+      online:          { color: 'var(--clr-success)',     text: 'Server online' },
+      'cold-starting': { color: 'var(--clr-warning)',     text: `Waking server up${dots} (~30s)` },
+      offline:         { color: 'var(--clr-danger)',      text: 'Server offline — Workspace Mode unavailable' },
     };
     const { color, text } = map[apiStatus];
     return (
-      <span className={`text-xs ${color} flex items-center gap-1.5`}>
-        <span className={`w-1.5 h-1.5 rounded-full bg-current ${apiStatus === 'cold-starting' ? 'animate-pulse' : ''}`} />
+      <span style={{ fontSize: 12, color, display: 'flex', alignItems: 'center', gap: 6 }}>
+        <span style={{
+          width: 7, height: 7, borderRadius: '50%', background: color, flexShrink: 0,
+          animation: apiStatus === 'cold-starting' ? 'pulse 1.4s infinite' : 'none',
+        }} />
         {text}
       </span>
     );

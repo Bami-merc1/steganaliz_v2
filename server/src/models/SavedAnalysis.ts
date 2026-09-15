@@ -1,19 +1,17 @@
 import mongoose, { type Document, Schema } from 'mongoose';
 
-// Stores encrypted analysis results so users can compare across sessions.
-// Like WorkspaceEntry — server holds only ciphertext.
 export interface ISavedAnalysis extends Document {
-  userId:        mongoose.Types.ObjectId;
-  label:         string;        // user-assigned name, plaintext (not sensitive)
-  encryptedBlob: string;        // AES-GCM encrypted JSON of the full verdict
+  userId:        string;   // Supabase UUID
+  label:         string;
+  encryptedBlob: string;
   iv:            string;
   salt:          string;
-  fileHash:      string;        // SHA-256 of the analysed file (for dedup)
+  fileHash:      string;
   createdAt:     Date;
 }
 
 const SavedAnalysisSchema = new Schema<ISavedAnalysis>({
-  userId:        { type: Schema.Types.ObjectId, ref: 'User', required: true, index: true },
+  userId:        { type: String, required: true, index: true },
   label:         { type: String, required: true, maxlength: 200 },
   encryptedBlob: { type: String, required: true },
   iv:            { type: String, required: true },
